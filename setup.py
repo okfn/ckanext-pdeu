@@ -25,7 +25,8 @@ setup(
 	entry_points=\
 	"""
         [ckan.plugins]
-	# Add plugins here, eg
+	# Add plugins here
 	data_publica_harvester=ckanext.pdeu.harvesters:DataPublicaHarvester
+	opengov_se_harvester=ckanext.pdeu.harvesters:OpenGovSeHarvester
 	""",
 )
