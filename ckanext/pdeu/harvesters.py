@@ -58,13 +58,9 @@ class PDEUHarvester(SingletonPlugin):
             return None
 
     def _get_content(self, url):
-        http_request = urllib2.Request(
-            url = url,
-        )
-
+        http_request = urllib2.Request(url=url)
         try:
             http_response = urllib2.urlopen(http_request)
-
             return http_response.read()
         except Exception, e:
             raise e
@@ -79,7 +75,7 @@ class PDEUHarvester(SingletonPlugin):
         err.save()
         log.error(message)
 
-    def _create_harvest_objects(self,remote_ids,harvest_job):
+    def _create_harvest_objects(self, remote_ids, harvest_job):
         try:
             object_ids = []
             if len(remote_ids):
@@ -91,10 +87,8 @@ class PDEUHarvester(SingletonPlugin):
                     object_ids.append(obj.id)
 
                 return object_ids
-
             else:
-               self._save_gather_error('No remote datasets could be identified',harvest_job)
-               return None
+               self._save_gather_error('No remote datasets could be identified', harvest_job)
         except Exception, e:
             self._save_gather_error('%r'%e.message,harvest_job)
 
@@ -115,6 +109,8 @@ class PDEUHarvester(SingletonPlugin):
 
         '''
         try:
+            #from pprint import pprint 
+            #pprint(package_dict)
             ## change default schema
             schema = default_package_schema()
             schema["id"] = [ignore_missing, unicode]
@@ -154,8 +150,10 @@ class PDEUHarvester(SingletonPlugin):
             return True
 
         except ValidationError,e:
+            log.exception(e)
             self._save_object_error('Invalid package with GUID %s: %r'%(harvest_object.guid,e.error_dict),harvest_object,'Import')
         except Exception, e:
+            log.exception(e)
             self._save_object_error('%r'%e,harvest_object,'Import')
 
         return None
@@ -169,7 +167,7 @@ class DataPublicaHarvester(PDEUHarvester):
         return {
             'name': 'data_publica',
             'title': 'Data Publica',
-            'description': 'Scrapper for data-publica.com'
+            'description': 'Scraper for data-publica.com'
         }
 
     gathered_ids = []
@@ -231,6 +229,7 @@ class DataPublicaHarvester(PDEUHarvester):
         try:
             content = self._get_content(url)
         except Exception,e:
+            log.exception(e)
             self._save_object_error('Unable to get content for dataset: %s: %r' % \
                                         (url, e),harvest_object)
             return None
@@ -337,6 +336,7 @@ class DataPublicaHarvester(PDEUHarvester):
             package_dict['extras'] = extras_dict
 
         except Exception, e:
+            log.exception(e)
             self._save_object_error('%r'%e,harvest_object,'Import')
 
         return self._create_or_update_package(package_dict,harvest_object)
@@ -405,10 +405,18 @@ class OpenGovSeHarvester(PDEUHarvester):
             graph.parse(StringIO(harvest_object.content))
 
             url = harvest_object.guid
-            fts = URIRef(url)
+            #dataset_uri = URIRef(url)
+            for (s,p,o) in graph.triples((None, RDF.type, DCAT.Dataset)):
+                package_dict = dcat_to_ckan(graph, s)
+                break
+            tags = []
+            for tag in package_dict.get('tags', []):
+                tag = re.sub(r'[^a-zA-Z0-9 ]','',tag).replace(' ','-').lower()
+                tags.append(tag)
+            package_dict['tags'] = tags
 
-            package_dict = dcat_to_ckan(graph,fts)
         except Exception, e:
+            log.exception(e)
             self._save_object_error('%r'%e,harvest_object,'Import')
 
         package_dict['id'] = harvest_object.guid
@@ -420,5 +428,105 @@ class OpenGovSeHarvester(PDEUHarvester):
             package_dict['metadata_modified'] = package_dict['extras']['date_modified']
 
         return self._create_or_update_package(package_dict,harvest_object)
+
+import json
+from csv import DictReader
+class DataLondonGovUkHarvester(PDEUHarvester):
+    CATALOGUE_CSV_URL = "http://data.london.gov.uk/datafiles/datastore-catalogue.csv"
+
+    def info(self):
+        return {
+            'name': 'data_london_gov_uk',
+            'title': 'data.london.gov.uk',
+            'description': 'CSV Import from GLA Datastore'
+        }
+
+    def gather_stage(self, harvest_job):
+        log.debug('In DataLondonGovUk gather_stage')
+        
+        csvfh = urllib2.urlopen(self.CATALOGUE_CSV_URL)
+        csv = DictReader(csvfh)
+        ids = []
+        for row in csv:
+            id = row.get('DRUPAL_NODE')
+            row = dict([(k, v.decode('latin-1')) for k, v in row.items()])
+            obj = HarvestObject(guid=id, job=harvest_job,
+                    content=json.dumps(row))
+            obj.save()
+            ids.append(obj.id)
+        return ids
+
+    def fetch_stage(self, harvest_object):
+        return True
+
+    def import_stage(self,harvest_object):
+        if not harvest_object:
+            log.error('No harvest object received')
+            return False
+
+        if harvest_object.content is None:
+            self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
+            return False
+
+        try:
+            row = json.loads(harvest_object.content)
+            def csplit(txt):
+                return [t.strip() for t in txt.split(",")]
+
+            package_dict = {
+                    'title': row['TITLE'],
+                    'url': row['URL'],
+                    'notes': row['LONGDESC'],
+                    'author': row['AUTHOR_NAME'],
+                    'maintainer': row['MAINTAINER'],
+                    'maintainer_email': row['MAINTAINER_EMAIL'],
+                    'tags': csplit(row['TAGS']),
+                    'extras': {
+                        'date_released': row['RELEASE_DATE'],
+                        'categories': csplit(row['CATEGORIES']),
+                        'geographical_granularity': row['GEOGRAPHY'],
+                        'geographical_coverage': row['EXTENT'],
+                        'temporal_granularity': row['UPDATE_FREQUENCY'],
+                        'temporal_coverage': row['DATE_RANGE'],
+                        'license_summary': row['LICENSE_SUMMARY'],
+                        'license_details': row['license_details'],
+                        'spatial_reference_system': row['spatial_ref'],
+                        'datastore_url': row['DATASTORE_URL']
+                    },
+                    'resources': []
+                }
+
+            def pkg_format(prefix, mime_type):
+                if row.get(prefix + "_URL"):
+                    package_dict['resources'].append({
+                        'url': row.get(prefix + "_URL"),
+                        'format': mime_type,
+                        'description': "%s version" % prefix.lower()
+                        })
+
+            pkg_format('EXCEL', 'application/vnd.ms-excel')
+            pkg_format('CSV', 'text/csv')
+            pkg_format('TAB', 'text/tsv')
+            pkg_format('XML', 'text/xml')
+            pkg_format('GOOGLEDOCS', 'api/vnd.google-spreadsheet')
+            pkg_format('JSON', 'application/json')
+            pkg_format('SHP', 'application/octet-stream+esri')
+            pkg_format('KML', 'application/vnd.google-earth.kml+xml')
+        except Exception, e:
+            log.exception(e)
+            self._save_object_error('%r' % e, harvest_object, 'Import')
+
+        package_dict['id'] = harvest_object.guid
+        if not package_dict.get('name'):
+            package_dict['name'] = self._gen_new_name(package_dict['title'])
+        
+        tags = []
+        for tag in package_dict.get('tags', []):
+            tag = re.sub(r'[^a-zA-Z0-9 ]','',tag).replace(' ','-').lower()
+            tags.append(tag)
+        package_dict['tags'] = tags
+        return self._create_or_update_package(package_dict, harvest_object)
+
+
 
 

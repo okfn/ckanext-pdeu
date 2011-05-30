@@ -87,7 +87,8 @@ def dcat_to_ckan(graph, dataset):
             """, bind=bind))
         if res['url'] is None and isinstance(dist, URIRef):
                 res['url'] = unicode(dist)
-        data['resources'].append(res)
+        if res.get('url'):
+            data['resources'].append(res)
     
     extras = {}
     extras['rdf_source_id'] = unicode(dataset)

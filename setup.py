@@ -28,5 +28,6 @@ setup(
 	# Add plugins here
 	data_publica_harvester=ckanext.pdeu.harvesters:DataPublicaHarvester
 	opengov_se_harvester=ckanext.pdeu.harvesters:OpenGovSeHarvester
+	data_london_gov_uk_harvester=ckanext.pdeu.harvesters:DataLondonGovUkHarvester
 	""",
 )
