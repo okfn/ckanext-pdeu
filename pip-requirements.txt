@@ -1,2 +1,1 @@
-rdflib>=3.0.0
-rdfextras>=0.1
+-e hg+https://bitbucket.org/okfn/ckanext-rdf#egg=ckanext-rdf

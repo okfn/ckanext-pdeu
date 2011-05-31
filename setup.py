@@ -29,5 +29,6 @@ setup(
 	data_publica_harvester=ckanext.pdeu.harvesters:DataPublicaHarvester
 	opengov_se_harvester=ckanext.pdeu.harvesters:OpenGovSeHarvester
 	data_london_gov_uk_harvester=ckanext.pdeu.harvesters:DataLondonGovUkHarvester
+	data_wien_gv_at_harvester=ckanext.pdeu.harvesters:DataWienGvAtHarvester
 	""",
 )
