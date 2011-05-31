@@ -109,7 +109,7 @@ class PDEUHarvester(SingletonPlugin):
 
             context = {
                 'model': model,
-                'session':Session,
+                'session': Session,
                 'user': u'harvest',
                 'api_version':'2',
                 'schema': schema,
@@ -124,7 +124,7 @@ class PDEUHarvester(SingletonPlugin):
                    package_dict['metadata_modified'] > existing_package_dict.get('metadata_modified'):
                     log.info('Package with GUID %s exists and needs to be updated' % harvest_object.guid)
                     # Update package
-                    updated_package = package_update_rest(package_dict,context)
+                    updated_package = package_update_rest(package_dict, context)
 
                     harvest_object.package_id = updated_package['id']
                     harvest_object.save()
@@ -135,7 +135,7 @@ class PDEUHarvester(SingletonPlugin):
                 # Package needs to be created
                 del context['id']
                 log.info('Package with GUID %s does not exist, let\'s create it' % harvest_object.guid)
-                new_package = package_create_rest(package_dict,context)
+                new_package = package_create_rest(package_dict, context)
                 harvest_object.package_id = new_package['id']
                 harvest_object.save()
 
@@ -479,7 +479,7 @@ class DataLondonGovUkHarvester(PDEUHarvester):
                         'license_summary': row['LICENSE_SUMMARY'],
                         'license_details': row['license_details'],
                         'spatial_reference_system': row['spatial_ref'],
-                        'datastore_url': row['DATASTORE_URL']
+                        'harvest_dataset_url': row['DATASTORE_URL']
                     },
                     'resources': []
                 }
@@ -515,6 +515,7 @@ class DataLondonGovUkHarvester(PDEUHarvester):
 
 
 from lxml import html, etree
+from hashlib import sha1
 class DataWienGvAtHarvester(PDEUHarvester):
     CATALOGUE_FEED_URL = "http://data.wien.gv.at/katalog/.indexR.xml"
 
@@ -532,7 +533,7 @@ class DataWienGvAtHarvester(PDEUHarvester):
         ids = []
         for link in doc.findall("//item/link"):
             link = link.text
-            id = link.rsplit('/',1)[-1].split('.', 1)[0]
+            id = sha1(link).hexdigest()
             obj = HarvestObject(guid=id, job=harvest_job, content=link)
             obj.save()
             ids.append(obj.id)
@@ -540,7 +541,8 @@ class DataWienGvAtHarvester(PDEUHarvester):
 
     def fetch_stage(self, harvest_object):
         doc = html.parse(harvest_object.content)
-        package_dict = {'extras': {}, 'resources': []}
+        package_dict = {'extras': {'harvest_dataset_url': harvest_object.content}, 
+                        'resources': []}
         package_dict['title'] = doc.findtext('//title').split(' | ')[0]
         if not doc.find('//table[@class="BDE-table-frame vie-ogd-table"]'):
             return False
@@ -585,7 +587,7 @@ class DataWienGvAtHarvester(PDEUHarvester):
                 package_dict['maintainer'] = elem.xpath("string()")
             elif key == 'Lizenz':
                 if 'by/3.0/at/deed.de' in elem.findall('.//a')[0].get('href'):
-                    package_dict['licenseId'] = 'cc-by'
+                    package_dict['license_id'] = 'cc-by'
             elif key == 'Datensatz':
                 for li in elem.findall('.//li'):
                     link = li.find('.//a').get('href')
@@ -619,6 +621,87 @@ class DataWienGvAtHarvester(PDEUHarvester):
             log.exception(e)
             self._save_object_error('%r' % e, harvest_object, 'Import')
 
+
+class OpendataParisFrHarvester(PDEUHarvester):
+    PREFIX_URL = "http://opendata.paris.fr/opendata/"
+    CATALOGUE_INDEX_URL = "jsp/site/Portal.jsp?page_id=5"
+
+    def info(self):
+        return {
+            'name': 'opendata_paris_fr',
+            'title': 'Paris Open Data',
+            'description': 'Bienvenue sur ParisData, le site de la politique Open Data de la Ville de Paris.'
+        }
+
+    def gather_stage(self, harvest_job):
+        log.debug('In OpendataParisFr gather_stage')
+        
+        doc = html.parse(self.PREFIX_URL + self.CATALOGUE_INDEX_URL)
+        ids = []
+        for link in doc.findall("//div[@class='animate download-portlet-element']/a"):
+            link = link.get('href')
+            id = sha1(link).hexdigest()
+            obj = HarvestObject(guid=id, job=harvest_job, content=link)
+            obj.save()
+            ids.append(obj.id)
+        return ids
+
+    def fetch_stage(self, harvest_object):
+        doc = html.parse(self.PREFIX_URL + harvest_object.content)
+        package_dict = {'extras': {}, 'resources': [], 'tags': []}
+        package_dict['title'] = doc.findtext('//h3[@class="fullpage-header"]')
+        package_dict['author'] = doc.find('//meta[@name="author"]').get('content')
+        package_dict['extras']['harvest_dataset_url'] = self.PREFIX_URL + harvest_object.content
+        for p in doc.findall('//div[@id="content"]//p'):
+            section = p.find('strong')
+            if section is None:
+                continue
+            key = section.text.strip().encode('utf-8')
+            value = section.tail.strip().encode('utf-8')
+            if 'Mots' in key:
+                for tag in p.findtext('.//span[@id="tags"]').split(','):
+                    tag = tag.strip()
+                    tag = re.sub(r'[^a-zA-Z0-9 ]','',tag).replace(' ','-').lower()
+                    package_dict['tags'].append(tag)
+            elif 'Description' in key:
+                package_dict['notes'] = value
+            elif 'publication' in key:
+                package_dict['metadata_created'] = value
+            elif 'riode couverte par le jeu de don' in key: 
+                package_dict['extras']['temporal_coverage'] = value
+            elif 'quence de mise' in key: 
+                package_dict['extras']['temporal_granularity'] = value
+            elif 'Th' in key: 
+                package_dict['extras']['categories'] = value
+        
+        res = self.PREFIX_URL + doc.find('//a[@id="f1"]').get('href')
+        package_dict['resources'].append({
+            'url': res, 
+            'format': '', 
+            'description': 'Telecharger'
+            })
+        package_dict['license_id'] = 'odc-odbl'
+        harvest_object.content = json.dumps(package_dict)
+        harvest_object.save()
+        return True
+
+    def import_stage(self,harvest_object):
+        if not harvest_object:
+            log.error('No harvest object received')
+            return False
+
+        if harvest_object.content is None:
+            self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
+            return False
+
+        try:
+            package_dict = json.loads(harvest_object.content)
+            package_dict['id'] = harvest_object.guid
+            package_dict['name'] = self._gen_new_name(package_dict['title'])
+            return self._create_or_update_package(package_dict, harvest_object)
+        except Exception, e:
+            log.exception(e)
+            self._save_object_error('%r' % e, harvest_object, 'Import')
 
 
 
