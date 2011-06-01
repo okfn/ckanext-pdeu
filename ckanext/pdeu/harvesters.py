@@ -38,6 +38,9 @@ class PDEUHarvester(SingletonPlugin):
         name = munge_title_to_name(title).replace('_', '-')
         while '--' in name:
             name = name.replace('--', '-')
+        return name
+
+    def _check_name(self,name):
         like_q = u'%s%%' % name
         pkg_query = Session.query(Package).filter(Package.name.ilike(like_q)).limit(100)
         taken = [pkg.name for pkg in pkg_query]
@@ -134,6 +137,10 @@ class PDEUHarvester(SingletonPlugin):
             except NotFound:
                 # Package needs to be created
                 del context['id']
+
+                # Check if name has not already been used
+                package_dict['name'] = self._check_name(package_dict['name'])
+
                 log.info('Package with GUID %s does not exist, let\'s create it' % harvest_object.guid)
                 new_package = package_create_rest(package_dict, context)
                 harvest_object.package_id = new_package['id']
