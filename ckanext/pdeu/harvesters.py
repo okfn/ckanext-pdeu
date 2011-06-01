@@ -197,10 +197,6 @@ class DataPublicaHarvester(PDEUHarvester):
         next_url = self.INDEX_URL + '?' + urllib.urlencode(inputs)
         self.page = self.page + 1
         return self._gather_ids(url=next_url,jar=jar)
-        '''
-        self.queue(DataPublicaCatalogCrawler, jar=jar,
-                   url=next_url, last_urls=known_urls, low_priority=True)
-        '''
 
     def gather_stage(self,harvest_job):
         log.debug('In DataPublica gather_stage (%s)' % harvest_job.source.url)
@@ -308,7 +304,7 @@ class DataPublicaHarvester(PDEUHarvester):
                     package_dict['notes'] = text.strip()
 
                 if name == 'URL':
-                    #TODO: link to the catalog or the orginal URL?
+                    # This should link to the orginal URL
                     package_dict['url'] = field.find("div/a").get('href')
 
                 #FIELD Data Publications
@@ -323,6 +319,13 @@ class DataPublicaHarvester(PDEUHarvester):
                             'format':resource_formats[i],
                             'description':resource_descriptions[i]
                             })
+            
+
+            # Common extras
+            extras_dict['harvest_catalogue_name'] = u'Data Publica'
+            extras_dict['harvest_catalogue_url'] = u'http://www.data-publica.com'
+            extras_dict['harvest_dataset_url'] = u'http://www.data-publica.com/en/data_set_module/%s' % harvest_object.guid
+            extras_dict['eu_country'] = u'FR'
 
             package_dict['name'] = self._gen_new_name(package_dict['title'])
             package_dict['extras'] = extras_dict
@@ -415,6 +418,12 @@ class OpenGovSeHarvester(PDEUHarvester):
         if 'date_modified' in package_dict['extras']:
             package_dict['metadata_modified'] = package_dict['extras']['date_modified']
 
+        # Common extras
+        package_dict['extras']['harvest_catalogue_name'] = u'Opengov.se'
+        package_dict['extras']['harvest_catalogue_url'] = u'http://www.opengov.se'
+        package_dict['extras']['harvest_dataset_url'] = harvest_object.guid
+        package_dict['extras']['eu_country'] = u'SE'
+
         return self._create_or_update_package(package_dict,harvest_object)
 
 import json
@@ -479,7 +488,13 @@ class DataLondonGovUkHarvester(PDEUHarvester):
                         'license_summary': row['LICENSE_SUMMARY'],
                         'license_details': row['license_details'],
                         'spatial_reference_system': row['spatial_ref'],
-                        'harvest_dataset_url': row['DATASTORE_URL']
+                        'harvest_dataset_url': row['DATASTORE_URL'],
+                        # Common extras
+                        'harvest_catalogue_name': 'London Datastore',
+                        'harvest_catalogue_url': 'http://data.london.gov.uk',
+                        'eu_country':'UK',
+                        'eu_nuts1':'UKI'
+
                     },
                     'resources': []
                 }
@@ -509,7 +524,8 @@ class DataLondonGovUkHarvester(PDEUHarvester):
         tags = []
         for tag in package_dict.get('tags', []):
             tag = re.sub(r'[^a-zA-Z0-9 ]','',tag).replace(' ','-').lower()
-            tags.append(tag)
+            if not tag in tags:
+                tags.append(tag)
         package_dict['tags'] = tags
         return self._create_or_update_package(package_dict, harvest_object)
 
@@ -562,7 +578,8 @@ class DataWienGvAtHarvester(PDEUHarvester):
                 for tag in value.split(','):
                     tag = tag.strip()
                     tag = re.sub(r'[^a-zA-Z0-9 ]','',tag).replace(' ','-').lower()
-                    package_dict['tags'].append(tag)
+                    if not tag in package_dict['tags']:
+                        package_dict['tags'].append(tag)
         for row in doc.findall('//table[@class="BDE-table-frame vie-ogd-table"]//tr'):
             key = row.find('th/p').text
             elem = row.find('td')
@@ -616,6 +633,13 @@ class DataWienGvAtHarvester(PDEUHarvester):
             package_dict = json.loads(harvest_object.content)
             package_dict['id'] = harvest_object.guid
             package_dict['name'] = self._gen_new_name(package_dict['title'])
+
+            # Common extras
+            package_dict['extras']['harvest_catalogue_name'] = u'Open Government Data Wien'
+            package_dict['extras']['harvest_catalogue_url'] = u'http://data.wien.gv.at'
+            package_dict['extras']['eu_country'] = u'AT'
+            package_dict['extras']['eu_nuts2'] = u'AT13'
+
             return self._create_or_update_package(package_dict, harvest_object)
         except Exception, e:
             log.exception(e)
@@ -662,7 +686,8 @@ class OpendataParisFrHarvester(PDEUHarvester):
                 for tag in p.findtext('.//span[@id="tags"]').split(','):
                     tag = tag.strip()
                     tag = re.sub(r'[^a-zA-Z0-9 ]','',tag).replace(' ','-').lower()
-                    package_dict['tags'].append(tag)
+                    if not tag in package_dict['tags']:
+                        package_dict['tags'].append(tag)
             elif 'Description' in key:
                 package_dict['notes'] = value
             elif 'publication' in key:
@@ -698,6 +723,13 @@ class OpendataParisFrHarvester(PDEUHarvester):
             package_dict = json.loads(harvest_object.content)
             package_dict['id'] = harvest_object.guid
             package_dict['name'] = self._gen_new_name(package_dict['title'])
+
+            # Common extras
+            package_dict['extras']['harvest_catalogue_name'] = u'ParisData'
+            package_dict['extras']['harvest_catalogue_url'] = u'http://opendata.paris.fr'
+            package_dict['extras']['eu_country'] = u'FR'
+            package_dict['extras']['eu_nuts3'] = u'FR101'
+
             return self._create_or_update_package(package_dict, harvest_object)
         except Exception, e:
             log.exception(e)
