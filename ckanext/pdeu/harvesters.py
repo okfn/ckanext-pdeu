@@ -664,10 +664,11 @@ class OpendataParisFrHarvester(PDEUHarvester):
         ids = []
         for link in doc.findall("//div[@class='animate download-portlet-element']/a"):
             link = link.get('href')
-            id = sha1(link).hexdigest()
-            obj = HarvestObject(guid=id, job=harvest_job, content=link)
-            obj.save()
-            ids.append(obj.id)
+            if not "#comments" in link:
+                id = sha1(link).hexdigest()
+                obj = HarvestObject(guid=id, job=harvest_job, content=link)
+                obj.save()
+                ids.append(obj.id)
         return ids
 
     def fetch_stage(self, harvest_object):
