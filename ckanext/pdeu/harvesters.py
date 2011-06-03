@@ -325,6 +325,7 @@ class DataLondonGovUkHarvester(HarvesterBase):
                     'maintainer': row['MAINTAINER'],
                     'maintainer_email': row['MAINTAINER_EMAIL'],
                     'tags': csplit(row['TAGS']),
+                    'license_id': 'ukcrown',
                     'extras': {
                         'date_released': row['RELEASE_DATE'],
                         'categories': csplit(row['CATEGORIES']),
