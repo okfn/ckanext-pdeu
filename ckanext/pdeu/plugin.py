@@ -8,14 +8,11 @@ class RewiringController(BaseController):
     def tag(self, tags):
         redirect(h.url_for(controller='package', action='search', tags=tags))
 
+
 class DCatApi(SingletonPlugin):
     implements(IRoutes)
 
     def before_map(self, route_map):
-        dcat_controller = "ckanext.pdeu.controllers:DCatApiController"
-        route_map.connect("/package/{id}.rdf", controller=dcat_controller,
-                          action="show")
-
         wire_controller = "ckanext.pdeu.plugin:RewiringController"
         route_map.connect("/tag/{tags}", controller=wire_controller,
                           action="tag")
