@@ -26,7 +26,7 @@ setup(
 	"""
         [ckan.plugins]
 	# Add plugins here
-    dcat_api=ckanext.pdeu.plugin:DCatApi
+    ckan_pdeu_harvester=ckanext.pdeu.harvesters:PDEUCKANHarvester
 	data_publica_harvester=ckanext.pdeu.harvesters:DataPublicaHarvester
 	opengov_se_harvester=ckanext.pdeu.harvesters:OpenGovSeHarvester
 	data_london_gov_uk_harvester=ckanext.pdeu.harvesters:DataLondonGovUkHarvester

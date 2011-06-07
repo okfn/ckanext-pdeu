@@ -5,15 +5,57 @@ from datetime import datetime
 
 import logging
 
+from ckan import model
+from ckan.model import Session
 from ckan.logic import ValidationError, NotFound
+from ckan.logic.action.update import package_update_rest
+
 from ckan.lib.helpers import json
 
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.harvesters import HarvesterBase
+from ckanext.harvest.harvesters.ckanharvester import CKANHarvester
 from lxml import html, etree
 from cookielib import CookieJar
 
 log = logging.getLogger(__name__)
+
+
+class PDEUCKANHarvester(CKANHarvester):
+
+    def info(self):
+        return {
+            'name': 'ckan_pdeu',
+            'title': 'CKAN (PublicData.eu)',
+            'description': 'CKAN Harvester modified for PublicData.eu needs',
+            'form_config_interface':'Text'
+        }
+
+    def import_stage(self,harvest_object):
+
+        super(PDEUCKANHarvester, self).import_stage(harvest_object)
+
+        # Add some extras to the newly created package
+        new_extras = {
+            'eu_country': self.config.get('eu_country',''),
+            'harvest_catalogue_name': self.config.get('harvest_catalogue_name',''),
+            'harvest_catalogue_url': harvest_object.job.source.url,
+            'harvest_dataset_url': harvest_object.job.source.url.strip('/') + '/package/' + harvest_object.package_id
+        }
+
+        for extra in ['eu_nuts1','eu_nuts2','eu_nuts3']:
+            if self.config.get(extra,''):
+                new_extras[extra] = self.config[extra]
+
+        context = {
+            'model': model,
+            'session': Session,
+            'user': u'harvest',
+            'id': harvest_object.package_id
+        }
+
+        data_dict = {'extras':new_extras}
+        package_update_rest(data_dict,context)
 
 class DataPublicaHarvester(HarvesterBase):
     INITIAL_INDEX = "http://www.data-publica.com/en/data/WebSection_viewContentDetailledList"
@@ -176,7 +218,7 @@ class DataPublicaHarvester(HarvesterBase):
                             'format':resource_formats[i],
                             'description':resource_descriptions[i]
                             })
-            
+
 
             # Common extras
             extras_dict['harvest_catalogue_name'] = u'Data Publica'
@@ -287,7 +329,7 @@ class DataLondonGovUkHarvester(HarvesterBase):
 
     def gather_stage(self, harvest_job):
         log.debug('In DataLondonGovUk gather_stage')
-        
+
         csvfh = urllib2.urlopen(self.CATALOGUE_CSV_URL)
         csv = DictReader(csvfh)
         ids = []
@@ -386,7 +428,7 @@ class DataWienGvAtHarvester(HarvesterBase):
 
     def gather_stage(self, harvest_job):
         log.debug('In DataWienGvAt gather_stage')
-        
+
         doc = etree.parse(self.CATALOGUE_FEED_URL)
         ids = []
         for link in doc.findall("//item/link"):
@@ -399,7 +441,7 @@ class DataWienGvAtHarvester(HarvesterBase):
 
     def fetch_stage(self, harvest_object):
         doc = html.parse(harvest_object.content)
-        package_dict = {'extras': {'harvest_dataset_url': harvest_object.content}, 
+        package_dict = {'extras': {'harvest_dataset_url': harvest_object.content},
                         'resources': []}
         package_dict['title'] = doc.findtext('//title').split(' | ')[0]
         if not doc.find('//table[@class="BDE-table-frame vie-ogd-table"]'):
@@ -420,24 +462,24 @@ class DataWienGvAtHarvester(HarvesterBase):
         for row in doc.findall('//table[@class="BDE-table-frame vie-ogd-table"]//tr'):
             key = row.find('th/p').text
             elem = row.find('td')
-            if key == 'Beschreibung': 
+            if key == 'Beschreibung':
                 package_dict['notes'] = elem.xpath("string()")
             elif key == 'Bezugsebene':
                 package_dict['extras']['geographic_coverage'] = elem.xpath("string()")
-            elif key == 'Zeitraum': 
+            elif key == 'Zeitraum':
                 package_dict['extras']['temporal_coverage'] = elem.xpath("string()")
-            elif key == 'Aktualisierung': 
+            elif key == 'Aktualisierung':
                 package_dict['extras']['temporal_granularity'] = elem.xpath("string()")
-            elif key == 'Kategorien': 
+            elif key == 'Kategorien':
                 package_dict['extras']['categories'] = elem.xpath("string()")
-            elif key == 'Typ': 
+            elif key == 'Typ':
                 package_dict['extras']['type'] = elem.xpath("string()")
-            elif key == u'Attribute': 
+            elif key == u'Attribute':
                 elem.tag = 'span'
                 package_dict['extras']['attributes'] = etree.tostring(elem)
-            elif key == u'Datenqualität': 
+            elif key == u'Datenqualität':
                 package_dict['extras']['data_quality'] = elem.xpath("string()")
-            elif key == 'Kontakt': 
+            elif key == 'Kontakt':
                 package_dict['maintainer'] = elem.xpath("string()")
             elif key == 'Lizenz':
                 if 'by/3.0/at/deed.de' in elem.findall('.//a')[0].get('href'):
@@ -447,7 +489,7 @@ class DataWienGvAtHarvester(HarvesterBase):
                     link = li.find('.//a').get('href')
                     if li.find('.//abbr') is not None:
                         res = {'description': li.xpath('string()'),
-                               'url': link, 
+                               'url': link,
                                'format': li.find('.//abbr').text}
                         package_dict['resources'].append(res)
                     else:
@@ -496,7 +538,7 @@ class OpendataParisFrHarvester(HarvesterBase):
 
     def gather_stage(self, harvest_job):
         log.debug('In OpendataParisFr gather_stage')
-        
+
         doc = html.parse(self.PREFIX_URL + self.CATALOGUE_INDEX_URL)
         ids = []
         for link in doc.findall("//div[@class='animate download-portlet-element']/a"):
@@ -526,17 +568,17 @@ class OpendataParisFrHarvester(HarvesterBase):
                 package_dict['notes'] = value
             elif 'publication' in key:
                 package_dict['metadata_created'] = value
-            elif 'riode couverte par le jeu de don' in key: 
+            elif 'riode couverte par le jeu de don' in key:
                 package_dict['extras']['temporal_coverage'] = value
-            elif 'quence de mise' in key: 
+            elif 'quence de mise' in key:
                 package_dict['extras']['temporal_granularity'] = value
-            elif 'Th' in key: 
+            elif 'Th' in key:
                 package_dict['extras']['categories'] = value
-        
+
         res = self.PREFIX_URL + doc.find('//a[@id="f1"]').get('href')
         package_dict['resources'].append({
-            'url': res, 
-            'format': '', 
+            'url': res,
+            'format': '',
             'description': 'Telecharger'
             })
         package_dict['license_id'] = 'odc-odbl'
