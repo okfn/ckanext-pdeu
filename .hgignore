@@ -10,3 +10,5 @@ dist
 development.ini
 *.swp
 *.swo
+CREDENTIALS.py
+
