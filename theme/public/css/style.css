@@ -209,6 +209,7 @@ table caption {
   border-right: 1px solid #e0e0e0;
   margin-right: -10px;
   padding-right: 9px;
+  overflow: hidden;
 }
 
 #sidebar h2, #sidebar h3 {
@@ -257,11 +258,9 @@ table caption {
 
 }
 
-.facet-box h2 {
+#sidebar .facet-box h2 {
     color: #000;
     font-size: 1.2em;
-    font-weight: bold;
-    margin-top: 1em;
 }
 
 .facet-options {
@@ -270,7 +269,6 @@ table caption {
 
 .facet-options li {
     padding-top: 0.2em;
-    font-size: 1.2em; 
     color: #000; 
 }
 
@@ -299,14 +297,22 @@ table caption {
     display: inline-block;
     margin-right: 5px;
     margin-bottom: 10px;
-    padding: 1px 1px 3px 2px;
+    padding: 2px 2px 4px 3px;
     font-size: 14px;
-    background-color: #eee;
+    background-color: #E5ECF9;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
     line-height: 16px;
+    /*
     -moz-box-shadow: 1px 1px 3px #bbb;
     -webkit-box-shadow: 1px 1px 3px #bbb;
     box-shadow: 1px 1px 3px #bbb;
-    
+    */
+}
+
+.search-field img {
+    margin-bottom: -3px;
 }
 
 .search-field-name::after {
@@ -509,6 +515,16 @@ form.package-search input.search {
     margin-top: 5px;
     margin-right: 10px !important;
     margin-bottom: 1px !important;
+}
+
+.package-search-filters {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  color: #888;
+}
+
+.package-search-filters label {
+  padding-left: 1em;
 }
 
 /* =================== */

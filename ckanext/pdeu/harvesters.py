@@ -470,9 +470,10 @@ class DataWienGvAtHarvester(HarvesterBase):
                 package_dict['extras']['temporal_coverage'] = elem.xpath("string()")
             elif key == 'Aktualisierung':
                 package_dict['extras']['temporal_granularity'] = elem.xpath("string()")
-            elif key == 'Kategorien':
-                package_dict['extras']['categories'] = elem.xpath("string()")
-            elif key == 'Typ':
+            elif key == 'Kategorien': 
+                categories = elem.xpath("string()").split(',')
+                package_dict['extras']['categories'] = [c.strip() for c in categories]
+            elif key == 'Typ': 
                 package_dict['extras']['type'] = elem.xpath("string()")
             elif key == u'Attribute':
                 elem.tag = 'span'
