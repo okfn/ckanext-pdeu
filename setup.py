@@ -26,6 +26,7 @@ setup(
 	"""
         [ckan.plugins]
 	# Add plugins here
+    pdeu_customizations=ckanext.pdeu.plugin:PDEUCustomizations
     ckan_pdeu_harvester=ckanext.pdeu.harvesters:PDEUCKANHarvester
 	data_publica_harvester=ckanext.pdeu.harvesters:DataPublicaHarvester
 	opengov_se_harvester=ckanext.pdeu.harvesters:OpenGovSeHarvester
