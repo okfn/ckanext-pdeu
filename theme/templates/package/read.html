@@ -1,11 +1,19 @@
 <html xmlns:py="http://genshi.edgewall.org/"
   xmlns:i18n="http://genshi.edgewall.org/i18n"
   xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:dc="http://purl.org/dc/terms/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dcat="http://www.w3.org/ns/dcat#"
+  typeof="dcat:Dataset"
+  about=""
   py:strip="">
 
   <py:def function="page_title">${c.pkg.title or c.pkg.name} - Data Packages</py:def>
   
-  <py:def function="page_heading">${c.pkg.title}</py:def>
+  <py:def function="page_heading" property="dc:title">${c.pkg.title}</py:def>
   
       
   <py:match path="primarysidebar">
@@ -21,15 +29,15 @@
       <ul class="property-list">
         <li py:if="c.pkg.url">
           <h3>Source</h3>
-          ${c.pkg_url_link}
+          <span property="foaf:homepage">${c.pkg_url_link}</span>
         </li>
         <li py:if="c.pkg_author_link">
           <h3>Author</h3>
-          ${c.pkg_author_link}
+          <span property="dc:creator">${c.pkg_author_link}</span>
         </li>
         <li py:if="c.pkg_maintainer_link">
           <h3>Maintainer</h3>
-          ${c.pkg_maintainer_link}
+          <span property="dc:contributor">${c.pkg_maintainer_link}</span>
         </li>
         <li py:if="c.pkg.version">
           <h3>Version</h3>
@@ -88,10 +96,10 @@
       <p py:if="c.pkg.license_id">
         License:
         <py:choose test="">
-          <strong py:when="c.pkg.license and c.pkg.license.url"><br /><a
-              href="${c.pkg.license.url}">${c.pkg.license.title.split('::')[-1]}</a></strong>
-          <strong py:when="c.pkg.license"><br />${c.pkg.license.title}</strong>
-          <strong py:when="c.pkg.license_id"><br />${c.pkg.license_id}</strong>
+          <strong py:when="c.pkg.license and c.pkg.license.url"><a
+              href="${c.pkg.license.url}" rel="dc:rights">${c.pkg.license.title.split('::')[-1]}</a></strong>
+          <strong py:when="c.pkg.license" property="dc:rights">${c.pkg.license.title}</strong>
+          <strong py:when="c.pkg.license_id" property="dc:rights">${c.pkg.license_id}</strong>
         </py:choose>
       </p>
       <p class="okd">
@@ -122,12 +130,11 @@
     <xi:include href="read_core.html" />
   </div>
 
-  <py:if test="config.get('rdf_packages')">
-    <py:def function="optional_head">
-      <link rel="alternate" type="application/rdf+xml" title="RDF/XML" href="${config['rdf_packages'] + '/' + c.pkg.id + '.rdf' }" />
-      <link rel="alternate" type="application/turtle" title="RDF/Turtle" href="${config['rdf_packages'] + '/' + c.pkg.id + '.ttl' }" />
-    </py:def>
-  </py:if>
+  <py:def function="optional_head">
+    <link rel="alternate" type="application/rdf+xml" title="RDF/XML"
+    href="${url(controller='ckanext.rdf.controllers:DCatApiController',
+    action='show', id=c.pkg.name)}" />
+  </py:def>
 
   <py:def function="optional_feed">
   <link rel="alternate" type="application/atom+xml" title="Package History"

@@ -20,18 +20,20 @@
             <th>Hash</th>
         </tr>
         <py:for each="res in c.pkg.resources">
-          <tr>
+          <tr rel="dcat:distribution" resource="_:res${res.id}"
+            typeof="dcat:Distribution">
               <td>
                   <py:choose test="">
                     <py:when test="res.description">
-                      <a href="${res.url}" target="_blank">${res.description}</a>  
+                    <a href="${res.url}" rel="dcat:accessURL" target="_blank"><span
+                        property="rdfs:label">${res.description}</span></a>  
                     </py:when>
                     <py:otherwise test="">
-                      <a href="${res.url}" target="_blank">Download <em>(no description)</em></a>  
+                      <a href="${res.url}" rel="dcat:accessURL" target="_blank">Download <em>(no description)</em></a>  
                     </py:otherwise>
                   </py:choose>
               </td>
-              <td>${res.format}</td>
+              <td property="dc:format">${res.format}</td>
               <td>${res.hash}</td>
           </tr>
         </py:for>
@@ -66,9 +68,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr py:for="key, value in c.pkg_extras">
-          <td class="package-label">${_(key)}</td>
-          <td class="package-details">${value}</td>
+        <tr py:for="i, (key, value) in enumerate(c.pkg_extras)"
+          rel="dc:relation" resource="_:extra${i}">
+          <td class="package-label" property="rdfs:label">${_(key)}</td>
+          <td class="package-details" property="rdf:value">${value}</td>
         </tr>
       </tbody>
           <caption py:if="h.am_authorized(c, actions.EDIT, c.pkg)">
@@ -96,17 +99,21 @@
                     ${h.url_for(controller='api', register='package', action='show', id=c.pkg.name)}</a>
                 </py:if>
             </code>
-            <py:if test="config.get('rdf_packages')">
-                <h5>RDF</h5>
-                <code><a href="${config.get('rdf_packages') + '/' + c.pkg.id + '.rdf'}">RDF/XML</a></code>
-                <code><a href="${config.get('rdf_packages') + '/' + c.pkg.id + '.ttl'}">Turtle</a></code>
-                <code><a href="${config.get('rdf_packages') + '/' + c.pkg.id + '.nt'}">N-Triples</a></code>
-            </py:if>
+
+              <h5>RDF</h5>
+              <code><a rel="rdfs:seeAlso"
+                  href="${url(controller='ckanext.rdf.controllers:DCatApiController',
+                  action='show', id=c.pkg.name)}">${url(controller='ckanext.rdf.controllers:DCatApiController', action='show', id=c.pkg.name)}</a></code>
+            <p>There is also a SPARQL endpoint to query this registry at:</p>
+              <code><a
+                  href="${url(controller='ckanext.rdf.controllers:DCatApiController',
+                  action='sparql')}">${url(controller='ckanext.rdf.controllers:DCatApiController',
+                  action='sparql')}</a></code>
+            <h5>Information about this package:</h5>
             <p>
                 The information on this page and the downloads / resources are also available using the 
                 <a href="http://blog.okfn.org/2010/02/23/introducing-datapkg/">datapkg command line utility</a>.
             </p>
-            <h5>Information about this package:</h5>
             <code>$ datapkg info ckan://${c.pkg.name}</code>            
             <h5>Download:</h5>
             <code>$ datapkg download ckan://${c.pkg.name} .</code>            
