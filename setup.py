@@ -33,5 +33,6 @@ setup(
 	data_london_gov_uk_harvester=ckanext.pdeu.harvesters:DataLondonGovUkHarvester
 	data_wien_gv_at_harvester=ckanext.pdeu.harvesters:DataWienGvAtHarvester
 	opendata_paris_fr_harvester=ckanext.pdeu.harvesters:OpendataParisFrHarvester
+	digitaliser_dk_harvester=ckanext.pdeu.harvesters:DigitaliserDkHarvester
 	""",
 )
