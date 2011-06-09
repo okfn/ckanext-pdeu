@@ -615,6 +615,8 @@ class OpendataParisFrHarvester(HarvesterBase):
 from lxml import etree
 class DigitaliserDkHarvester(HarvesterBase):
     API_ENDPOINT = "http://api.digitaliser.dk/rest/"
+    NS = "{urn:oio:digitaliserdk:rest:1.0}"
+    PSN = "{http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/}"
 
     def info(self):
         return {
@@ -634,10 +636,9 @@ class DigitaliserDkHarvester(HarvesterBase):
             req = 'resources/search?query=&firstResult=%s&maxResults=%s' % \
                  (firstResult, maxResults)
             doc = etree.parse(self.API_ENDPOINT + req)
-            for handle in doc.findall("/ResourceHandle"):
+            for handle in doc.findall(self.NS + "ResourceHandle"):
                 link = handle.get('handleReference')
                 id = sha1(link).hexdigest()
-                print link
                 obj = HarvestObject(guid=id, job=harvest_job, content=link)
                 obj.save()
                 ids.append(obj.id)
@@ -648,43 +649,46 @@ class DigitaliserDkHarvester(HarvesterBase):
 
     def fetch_stage(self, harvest_object):
         doc = etree.parse(harvest_object.content)
-        category = doc.findtext('//ResourceCategoryHandle/TitleText')
+        category = doc.findtext('//' + self.NS + 'ResourceCategoryHandle/' + self.NS + 'TitleText')
         if category != "Datakilde":
             return
         package_dict = {'extras': {}, 'resources': [], 'tags': []}
-        package_dict['title'] = doc.findtext('/TitleText')
-        package_dict['notes'] = doc.findtext('/BodyText')
-        package_dict['author'] = doc.findtext('/ResourceOwnerGroupHandle/TitleText')
+        package_dict['title'] = doc.findtext(self.NS + 'TitleText')
+        package_dict['notes'] = doc.findtext(self.NS + 'BodyText')
+        package_dict['author'] = doc.findtext(self.NS + \
+                'ResourceOwnerGroupHandle/' + self.NS + 'TitleText')
         package_dict['extras']['harvest_dataset_url'] = harvest_object.content
 
-        package_dict['metadata_created'] = doc.findtext('/CreatedDateTime')
-        package_dict['metadata_modified'] = doc.find('/PublishedState').get('publishedDateTime')
+        package_dict['metadata_created'] = doc.findtext(self.NS + 'CreatedDateTime')
+        package_dict['metadata_modified'] = doc.find(self.NS + 'PublishedState').get('publishedDateTime')
         
-        responsible = doc.findtext('/ResponsibleReference')
+        responsible = doc.findtext(self.NS + 'ResponsibleReference')
         res_doc = etree.parse(responsible)
-        package_dict['maintainer'] = res_doc.findtext('/ns2:PersonGivenName') + \
-            " " + res_doc.findtext('/ns2:PersonSurnameName')
+        package_dict['maintainer'] = res_doc.findtext('//' + self.PSN + 'PersonGivenName') + \
+            " " + res_doc.findtext('//' + self.PSN + 'PersonSurnameName')
 
         package_dict['extras']['categories'] = []
-        for tax_handle in doc.findall('//TaxonomyNodeHandle'):
-            package_dict['extras']['categories'].append(tax_handle.findtext('TitleText'))
+        for tax_handle in doc.findall('//' + self.NS + 'TaxonomyNodeHandle'):
+            package_dict['extras']['categories'].append(tax_handle.findtext(self.NS + 'TitleText'))
         
-        for tag_handle in doc.findall('//TagHandle'):
-            package_dict['tags'].append(tag_handle.findtext('LabelText'))
+        for tag_handle in doc.findall('//' + self.NS + 'TagHandle'):
+            package_dict['tags'].append(tag_handle.findtext(self.NS + 'LabelText'))
         
-        ref_handle = doc.find('//ReferenceHandle')
+        ref_handle = doc.find('//' + self.NS + 'ReferenceHandle')
         if ref_handle: 
             ref_doc = etree.parse(ref_handle.get('handleReference'))
             package_dict['url'] = ref_doc.getroot().get('url')
 
-        for artefact in doc.find('//ArtefactHandle'):
+        for artefact in doc.findall('//' + self.NS + 'ArtefactHandle'):
             art_doc = etree.parse(artefact.get('handleReference'))
             package_dict['resources'].append({
                 'url': art_doc.getroot().get('url'),
                 'format': '',
-                'description': artefact.findtext('TitleText')
+                'description': artefact.findtext(self.NS + 'TitleText')
                 })
         
+        #from pprint import pprint
+        #pprint(package_dict)
         harvest_object.content = json.dumps(package_dict)
         harvest_object.save()
         return True
