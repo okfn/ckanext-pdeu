@@ -34,5 +34,6 @@ setup(
 	data_wien_gv_at_harvester=ckanext.pdeu.harvesters:DataWienGvAtHarvester
 	opendata_paris_fr_harvester=ckanext.pdeu.harvesters:OpendataParisFrHarvester
 	digitaliser_dk_harvester=ckanext.pdeu.harvesters:DigitaliserDkHarvester
+	piemonte_harvester=ckanext.pdeu.harvesters:DatiPiemonteItHarvester
 	""",
 )
