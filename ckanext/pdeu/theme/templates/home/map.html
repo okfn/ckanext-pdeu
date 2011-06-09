@@ -1,0 +1,28 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  py:strip="">
+  
+  <py:def function="page_title">Availability map</py:def>
+  <py:def function="page_heading">Availability map</py:def>
+  <py:def function="body_class">hide-sidebar</py:def>
+
+  <py:def function="optional_head">
+    <!-- Map -->
+    <script type="text/javascript" src="${g.site_url}/js/libs/jquery-1.5.1.min.js"></script> 
+    <!--<script type="text/javascript" src="http://localhost/euro/lib/openlayers-2.10/OpenLayers.js"></script> -->
+    <script type="text/javascript" src="${g.site_url}/js/libs/openlayers/OpenLayers_pdeu.js"></script> 
+    <script type="text/javascript" src="${g.site_url}/js/map.js"></script> 
+    <link rel="stylesheet" href="${g.site_url}/css/map.css" />
+  </py:def>
+
+  <div py:match="content">
+
+    <p i18n:msg="">Bla Bla</p>
+
+    <div id="map"></div>
+
+
+  </div>
+  <xi:include href="layout.html" />
+</html>

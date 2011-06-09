@@ -1,8 +1,13 @@
 from pylons.i18n import _
-
+import os
 import ckan.lib.helpers as h
+from ckan.lib.helpers import json
 from ckan.lib.base import BaseController, c, g, request, \
                           response, session, render, config, abort, redirect
+
+from ckan.model import Session,PackageExtra
+from sqlalchemy import distinct, func
+
 
 import logging
 log = logging.getLogger(__name__)
@@ -10,6 +15,10 @@ log = logging.getLogger(__name__)
 from datetime import datetime
 import gdata.spreadsheet.text_db
 
+def get_root_dir():
+    here = os.path.dirname(__file__)
+    rootdir = os.path.dirname(os.path.dirname(here))
+    return rootdir
 
 class RewiringController(BaseController):
 
@@ -61,3 +70,33 @@ class SubscribeController(BaseController):
         h.flash_success(_('Your email has been stored. Thank you for your interest.'))
         redirect('/')
 
+class MapController(BaseController):
+
+    def show(self):
+        template_file = os.path.join(get_root_dir(), 'ckanext', 'pdeu', 'theme', 'templates', 'home', 'map.html')
+        return render(template_file)
+
+    def data(self):
+
+        # Get the Europe dataset
+        rootdir = get_root_dir()
+        data_file = os.path.join(rootdir, 'ckanext', 'pdeu', 'data', 'eu.json')
+
+        f = open(data_file,'r')
+        o = json.load(f)
+        
+        # Get the package count by country
+        q = Session.query(distinct(PackageExtra.value), func.count(PackageExtra.value)) \
+                   .filter(PackageExtra.key==u'eu_country') \
+                   .group_by(PackageExtra.value)
+        values = {}
+        for country, count in q.all():
+            values[country] = count
+
+        # Set the package count for each country
+        for ft in o['features']:
+            code = ft['properties']['NUTS']
+            ft['properties']['datasets'] = values[code] if code in values else 0
+
+        response.content_type = 'application/json'
+        return json.dumps(o)

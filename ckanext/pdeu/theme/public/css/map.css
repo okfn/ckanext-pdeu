@@ -1,0 +1,8 @@
+#map{
+    background-color: #E9F4FF;
+}
+
+.olPopupCloseBox  {
+        background: url("/js/libs/openlayers/img/close.png") no-repeat scroll 0 0 transparent !important;
+}
+

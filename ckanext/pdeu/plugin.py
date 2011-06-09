@@ -29,6 +29,15 @@ class PDEUCustomizations(SingletonPlugin):
                           conditions=dict(method=['POST']),
                           action='send')
 
+        map_controller = 'ckanext.pdeu.controllers:MapController'
+        route_map.connect('/map',
+                          controller=map_controller,
+                          action='show')
+
+        route_map.connect('/map/data.json',
+                          controller=map_controller,
+                          action='data')
+
         return route_map
 
     def after_map(self, route_map):
