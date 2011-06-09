@@ -21,10 +21,10 @@
         </p>
     </li>
  
-    ${facet_sidebar('groups', label=h.group_name_to_title)}
     ${facet_sidebar('tags')}
+    ${facet_sidebar('extras_eu_country', label=h.code_to_country)}
     ${facet_sidebar('res_format')}
-    ${facet_sidebar('license')}
+    ${facet_sidebar('groups', label=h.group_name_to_title)}
 
     <li class="widget-container widget_text">
         <h4>Other access</h4>

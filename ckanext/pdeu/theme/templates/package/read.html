@@ -43,6 +43,9 @@
           <h3>Version</h3>
           ${c.pkg.version}
         </li>
+        <li py:if="c.eu_country">
+          <h3>Country</h3> ${h.code_to_country(c.eu_country)}
+        </li>
         <li py:if="len(c.pkg.tags)">
           <h3>Tags</h3>
           ${tag_list(c.pkg.tags)}
@@ -70,6 +73,11 @@
         </li>
         <li py:if="h.am_authorized(c, actions.CHANGE_STATE, c.pkg)">
           <li><h3>State</h3> ${c.pkg.state}</li>
+        </li>
+        <li py:if="c.harvest_catalogue_name">
+        <h3>Source</h3> <a href="${c.harvest_dataset_url}">Source
+          page</a> on <a
+          href="${c.harvest_catalogue_url}">${c.harvest_catalogue_name}</a>
         </li>
         <li py:if="c.package_relationships">
           <h3>Related packages</h3>
