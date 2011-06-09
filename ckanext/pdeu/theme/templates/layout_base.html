@@ -110,14 +110,72 @@
   </div>
   <div class="footer outer">
     <footer class="container">
-      <p id="credits">
+        <div class="xoxo span-6">
+          <h3 class="widget-title">About ${g.site_title}</h3>
+          <div class="textwidget">
+            <ul>
+                <li>${h.link_to(_('About'), h.url_for(controller='home', action='about', id=None))}</li>
+              <li>
+                <a href="http://lod2.okfn.org/">Blog</a>
+              </li>
+                <li>${h.link_to(_('API'), h.url_for(controller='api', action='get_api', id=None))}</li>
+                <li>${h.link_to(_('API Docs'), 'http://wiki.ckan.net/API')}</li>
+              <li>
+                <a href="http://www.okfn.org/contact/">Contact Us</a>
+              </li>
+              <li>
+                <a href="http://www.okfn.org/privacy-policy/">Privacy Policy</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="xoxo span-6">
+          <h3 class="widget-title">Languages</h3>
+          <div class="textwidget">
+            <ul>
+<?python
+  import ckan.lib.hash
+  current_url = url.current().encode('utf-8')
+  current_url_hash = ckan.lib.hash.get_message_hash(current_url)
+?>
+              <li py:for="locale in h.get_available_locales()[0::2]">
+              <a href="${url(controller='home', action='locale', 
+                             locale=str(locale), 
+                             return_to=current_url,
+                             hash=current_url_hash)}">
+                  ${locale.display_name or locale.english_name}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="xoxo span-6">
+          <h3 class="widget-title">&nbsp;</h3>
+          <div class="textwidget">
+            <ul>
+              <li py:for="locale in h.get_available_locales()[1::2]">
+              <a href="${url(controller='home', action='locale', 
+                             locale=str(locale), 
+                             return_to=current_url,
+                             hash=current_url_hash)}">
+                  ${locale.display_name or locale.english_name}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="xoxo span-6 last">
+          <h3 class="widget-title">&nbsp;</h3>
+          <p id="credits">
+          &copy; 2011:
         <img src="http://assets.okfn.org/images/logo/okf_logo_white_and_green_tiny.png" id="footer-okf-logo" />
-        An <a href="http://www.okfn.org/">Open Knowledge Foundation</a> Project &copy; 2011 
-            <a href="http://www.opendefinition.org/okd/">
-              <img alt="This Content and Data is Open" src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" style="border: none ; margin-bottom: -4px;"/></a>
-        Based on the open source <a
-          href="http://ckan.org">CKAN</a> data management platform.
+          <a href="http://www.okfn.org/">Open Knowledge Foundation</a><br/><br/>
+        Based on the <a
+          href="http://ckan.org">CKAN</a> data management platform.<br/>
+            <a href="http://www.opendefinition.org/okd/"><img alt="This Content and Data is Open" src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" style="border: none ; margin-bottom: -4px;"/></a>
       </p>
+          <a href="http://lod2.eu"><img src="/img/lod2.png" alt="Part of the LOD2 Project" /></a>
+        </div>
     </footer>
   </div> <!-- eo #container -->
 

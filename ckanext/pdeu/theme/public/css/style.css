@@ -98,8 +98,16 @@ footer {
   padding-top: 1em;
 }
 
+footer a {
+  text-decoration: none;
+}
+
 footer #footer-okf-logo {
   margin-bottom: -4px;
+}
+
+footer .xoxo h3 {
+  font-size: 1.2em;
 }
 
 
