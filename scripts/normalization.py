@@ -56,7 +56,6 @@ class categories(object):
             cats = [cats]
         for cat in cats:
             data = self.normalizer.get(cat, source_hint=pkg.get('ckan_url'))
-            pprint(data)
             if data.get('name'):
                 self._assign_group(client, pkg.get('name'), data)
 

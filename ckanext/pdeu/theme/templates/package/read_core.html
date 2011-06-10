@@ -17,7 +17,6 @@
         <tr>
             <th>Description</th>
             <th>Format</th>
-            <th>Hash</th>
         </tr>
         <py:for each="res in c.pkg.resources">
           <tr rel="dcat:distribution" resource="_:res${res.id}"
@@ -34,7 +33,6 @@
                   </py:choose>
               </td>
               <td property="dc:format">${res.format}</td>
-              <td>${res.hash}</td>
           </tr>
         </py:for>
             <caption>
