@@ -35,5 +35,6 @@ setup(
 	opendata_paris_fr_harvester=ckanext.pdeu.harvesters:OpendataParisFrHarvester
 	digitaliser_dk_harvester=ckanext.pdeu.harvesters:DigitaliserDkHarvester
 	piemonte_harvester=ckanext.pdeu.harvesters:DatiPiemonteItHarvester
+	opendata_cat_harvester=ckanext.pdeu.harvesters:OpenDataCatHarvester
 	""",
 )

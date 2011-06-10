@@ -7,5 +7,6 @@ from vienna import DataWienGvAtHarvester
 from paris import OpendataParisFrHarvester
 from digitaliser_dk import DigitaliserDkHarvester
 from piemonte import DatiPiemonteItHarvester
+from opendata_cat import OpenDataCatHarvester
 
 
