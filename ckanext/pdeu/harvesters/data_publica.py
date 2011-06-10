@@ -51,7 +51,7 @@ class DataPublicaHarvester(HarvesterBase):
 
                 new_ids.append(id)
 
-        if len(new_ids) == 0 or self.page == 2:
+        if len(new_ids) == 0: #or self.page == 2:
             return self.gathered_ids
         else:
             self.gathered_ids.extend(new_ids)
@@ -103,7 +103,6 @@ class DataPublicaHarvester(HarvesterBase):
             package_dict = {}
             extras_dict = {}
 
-            #TODO: Avoid collisions?
             package_dict['id'] = harvest_object.guid
             doc = html.document_fromstring(harvest_object.content)
             for field in doc.findall(".//div"):
@@ -179,11 +178,13 @@ class DataPublicaHarvester(HarvesterBase):
                             'description':resource_descriptions[i]
                             })
 
+            base = doc.find('.//head/base')
+            dataset_url = base.get('href')
 
             # Common extras
             extras_dict['harvest_catalogue_name'] = u'Data Publica'
             extras_dict['harvest_catalogue_url'] = u'http://www.data-publica.com'
-            extras_dict['harvest_dataset_url'] = u'http://www.data-publica.com/en/data_set_module/%s' % harvest_object.guid
+            extras_dict['harvest_dataset_url'] = dataset_url
             extras_dict['eu_country'] = u'FR'
 
             package_dict['name'] = self._gen_new_name(package_dict['title'])
