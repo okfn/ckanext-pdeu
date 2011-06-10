@@ -5,7 +5,7 @@ CKAN.EuroMap = function($){
 
     var selectControl = null;
     var selectedFeature = null;
-    
+
     var guessBestAnchorPoint = function(geometry){
         if (geometry.components.length == 1){
             return geometry.getBounds().getCenterLonLat();
@@ -19,7 +19,7 @@ CKAN.EuroMap = function($){
                     largest_component = geometry.components[i]
                 }
             }
-            return largest_component.getBounds().getCenterLonLat(); 
+            return largest_component.getBounds().getCenterLonLat();
         }
     }
 
@@ -30,7 +30,15 @@ CKAN.EuroMap = function($){
 
         var html = "<div class=\"popup\">";
         html += "<div class=\"name\">" + feature.attributes.NAME +"</div>";
-        html += "<div class=\"address\">" + feature.attributes.NAME_LOCAL+"</div>"
+        html += "<div class=\"local_name\">" + feature.attributes.NAME_LOCAL+"</div>"
+        html += "<div class=\"packages\">";
+        if (feature.attributes.packages){
+            html += "<a href=\"http://localhost:5000/package?extras_eu_country=" + feature.attributes.NUTS + "\">" +
+                feature.attributes.packages+" packages";
+        } else {
+            html += "No packages yet";
+        }
+        html += "</a></div>"
 
         var popup = new OpenLayers.Popup.FramedCloud("Feature Info",
             guessBestAnchorPoint(feature.geometry),
@@ -44,10 +52,10 @@ CKAN.EuroMap = function($){
         return false;
 
     }
-    
+
     var onPopupClose = function(event){
         avoidNextClick = true;
-        
+
         selectControl.unselect(selectedFeature);
         selectedFeature = null;
     }
@@ -57,59 +65,112 @@ CKAN.EuroMap = function($){
         event.feature.popup.destroy();
         event.feature.popup = null;
     }
-    
 
-    var getFeatureStyles = function(){
+    var getBreakPoints = function(groups){
+
+        var values = []
+        for (var i = 0; i < featuresLayer.features.length; i++){
+            ft = featuresLayer.features[i]
+            if (ft.attributes.packages != 0)
+                values.push(parseInt(ft.attributes.packages))
+        }
+        values.sort(function(a,b){return a -b})
+        var points = [];
+        var range = (values[values.length-1] - values[0]) / groups;
+        for (var i = 0; i < groups; i++){
+            if (i > 0)
+                points.push(values[0] + i*range)
+        }
+
+        return points;
+
+    }
+
+    var setupStyles = function(){
+        var config = CKAN.EuroMap.config;
+        var groups = 5;
+        var colors = $.calculateColor(config.startColor,config.endColor,config.groups,1);
+        var breakPoints = getBreakPoints(groups);
 
         // Default properties for all rules
         var defaultStyle = new OpenLayers.Style({
             "cursor":"pointer",
-            "fillColor":"#E6E6E6",
-            "strokeColor":"#000000"
+            "strokeColor":"#000000",
+            "strokeWidth":"1"
         });
         var selectStyle = new OpenLayers.Style({
-            "cursor":"pointer",
-            "fillColor":"#CC0000",
-            "strokeWidth":"1.5"
+            "fillColor":"#FFFFA3",
         });
 
-        defaultStyle.addRules([
+        // Create rules according to the actual values
+        var rules = []
+
+        // Countries with no packages
+        rules.push(
             new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: "==",
-                    property: "datasets",
+                    property: "packages",
                     value: 0
                 }),
                 symbolizer: {
                     "fillColor":'#FFFFFF'
                 }
-            }),
-            new OpenLayers.Rule({
-                elseFilter: true,
-                symbolizer: {
-                    "fillColor": "#00FF00"
-                }
-            })
-            ]);
+            }))
 
-         styleMap = new OpenLayers.StyleMap({
+        var min, max;
+        for (var i = 0; i < breakPoints.length; i++) {
+            if (i < breakPoints.length -1){
+                min = (i == 0) ? 1 : breakPoints[i - 1];
+                max = breakPoints [i];
+
+                rules.push(
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Logical({
+                            type: "&&",
+                            filters: [
+                                new OpenLayers.Filter.Comparison({
+                                    type: "<=",
+                                    property: "packages",
+                                    value: max
+                                }),
+                                new OpenLayers.Filter.Comparison({
+                                    type: ">",
+                                    property: "packages",
+                                    value: min
+                                })]
+                        }),
+                        symbolizer: {"fillColor": colors[i]}
+                    }));
+            } else {
+                min = breakPoints[i]
+                rules.push(
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                                    type: ">",
+                                    property: "packages",
+                                    value: min
+                                }),
+                        symbolizer: {"fillColor": colors[i]}
+                    }));
+            }
+        };
+
+
+        defaultStyle.addRules(rules);
+
+        styleMap = new OpenLayers.StyleMap({
             "default":defaultStyle,
             "select":selectStyle})
-       
-        return styleMap;
+
+        featuresLayer.styleMap = styleMap;
+        featuresLayer.redraw();
     }
 
-    
-
     // Public
-    
     return {
         map: null,
         setup: function(){
-            // Set element positions
-            //$("#loading").css("left",$(window).width()/2 - $("#loading").width()/2);
-
-
             // Set map div size
             var w = $("#content").width()
             $("#map").width((w < 600) ? w : 600);
@@ -119,25 +180,28 @@ CKAN.EuroMap = function($){
             // Create a new map
             var map = new OpenLayers.Map("map" ,
             {
-               /* 
+               /*
                 projection: new OpenLayers.Projection("EPSG:900913"),
-                
                 displayProjection: new OpenLayers.Projection("EPSG:4326"),
                 units: "m",
-                   maxResolution: 156543.0339,
-    maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
-                                     20037508.34, 20037508.34), 
-*/              maxExtent: new OpenLayers.Bounds(-33.32,26.72,47.02,72.23),
+                maxResolution: 156543.0339,
+                maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
+                                     20037508.34, 20037508.34),
+                */
+                maxExtent: new OpenLayers.Bounds(-33.32,26.72,47.02,72.23),
+                maxScale: 30000000,
+                minScale: 6000000,
+                numZoomLevels: 3,
                 fallThrough: true,
                 controls: [
-                new OpenLayers.Control.Navigation()
+                    new OpenLayers.Control.Navigation(),
+                    new OpenLayers.Control.PanZoomBar()
                 ],
                 theme:"/js/libs/openlayers/theme/default/style.css"
             });
 
             // Create layers to add
             var layers = [
-            //osm = new OpenLayers.Layer.OSM("Simple OSM Map"),
             euro = new OpenLayers.Layer.Vector("Europa", {
                             strategies: [new OpenLayers.Strategy.Fixed()],
                             //projection: new OpenLayers.Projection("EPSG:900913"),
@@ -145,51 +209,36 @@ CKAN.EuroMap = function($){
                                 url: "/map/data.json",
                                 format: new OpenLayers.Format.GeoJSON()
                             }),
-                            styleMap: getFeatureStyles(),
                             isBaseLayer: true
                         })
             ];
             map.addLayers(layers);
-        
+            featuresLayer = euro
+
             // Create two selection controls,one for the hover/highlight and one
             // for the click/popup
             var hoverSelectControl = new OpenLayers.Control.SelectFeature(
                 [euro],
-                {
-                    "hover": true,
-                    "multiple": false,
-                    "highlightOnly":true
-                }
-                );
+                {"hover": true,"multiple": false,"highlightOnly":true});
             map.addControl(hoverSelectControl);
             hoverSelectControl.activate();
+
             selectControl = new OpenLayers.Control.SelectFeature(
                 [euro],
-                {
-                    "hover": false,
-                    "multiple": false,
-                }
-                );
+                {"hover": false,"multiple": false});
             map.addControl(selectControl);
             selectControl.activate();
 
             euro.events.register("featureselected",this,onFeatureSelect);
             euro.events.register("featureunselected",this,onFeatureUnselect);
+            euro.events.register("featuresadded",this,setupStyles);
 
-        
-            
-            map.setCenter(
-                new OpenLayers.LonLat(8.98,48.74),4
-                );
-            
-            //map.zoomToMaxExtent()
-            //map.zoomToExtent(new OpenLayers.Bounds(-33.32,26.72,47.02,72.23),true);
-            
+            map.setCenter(new OpenLayers.LonLat(8.98,48.74),3);
+
             this.map = map;
 
         }
     }
-
 
 }(jQuery);
 

@@ -8,17 +8,20 @@
   <py:def function="body_class">hide-sidebar</py:def>
 
   <py:def function="optional_head">
+    <link rel="stylesheet" href="${g.site_url}/css/map.css" />
+  </py:def>
+  <py:def function="optional_footer">
     <!-- Map -->
-    <script type="text/javascript" src="${g.site_url}/js/libs/jquery-1.5.1.min.js"></script> 
-    <!--<script type="text/javascript" src="http://localhost/euro/lib/openlayers-2.10/OpenLayers.js"></script> -->
+    <script type="text/javascript" src="${g.site_url}/js/libs/jquery.color.js"></script>
     <script type="text/javascript" src="${g.site_url}/js/libs/openlayers/OpenLayers_pdeu.js"></script> 
     <script type="text/javascript" src="${g.site_url}/js/map.js"></script> 
-    <link rel="stylesheet" href="${g.site_url}/css/map.css" />
+    <script type="text/javascript">
+        CKAN.EuroMap.config = {"startColor": "${c.startColor}","endColor": "${c.endColor}","groups": ${c.groups}}
+    </script>
   </py:def>
 
   <div py:match="content">
 
-    <p i18n:msg="">Bla Bla</p>
 
     <div id="map"></div>
 

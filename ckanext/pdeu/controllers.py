@@ -73,6 +73,10 @@ class SubscribeController(BaseController):
 class MapController(BaseController):
 
     def show(self):
+        c.startColor = config.get('pdeu.map.start_color','#F1EEF6')
+        c.endColor = config.get('pdeu.map.end_color','#045A8D')
+        c.groups = config.get('pdeu.map.groups',5)
+
         template_file = os.path.join(get_root_dir(), 'ckanext', 'pdeu', 'theme', 'templates', 'home', 'map.html')
         return render(template_file)
 
@@ -96,7 +100,7 @@ class MapController(BaseController):
         # Set the package count for each country
         for ft in o['features']:
             code = ft['properties']['NUTS']
-            ft['properties']['datasets'] = values[code] if code in values else 0
+            ft['properties']['packages'] = values[code] if code in values else 0
 
         response.content_type = 'application/json'
         return json.dumps(o)
