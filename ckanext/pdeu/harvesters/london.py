@@ -4,8 +4,8 @@ import string
 from datetime import datetime
 from csv import DictReader
 import logging
+from hashlib import sha1
 
-from ckan.logic.action.update import package_update_rest
 from ckan.lib.helpers import json
 
 from ckanext.harvest.model import HarvestObject
@@ -14,6 +14,7 @@ from ckanext.harvest.harvesters import HarvesterBase
 log = logging.getLogger(__name__)
 
 class DataLondonGovUkHarvester(HarvesterBase):
+    CATALOGUE_URL = "http://data.london.gov.uk"
     CATALOGUE_CSV_URL = "http://data.london.gov.uk/datafiles/datastore-catalogue.csv"
 
     def info(self):
@@ -30,7 +31,7 @@ class DataLondonGovUkHarvester(HarvesterBase):
         csv = DictReader(csvfh)
         ids = []
         for row in csv:
-            id = row.get('DRUPAL_NODE')
+            id = sha1('%s/%s' % (self.CATALOGUE_URL,row.get('DRUPAL_NODE'))).hexdigest()
             row = dict([(k, v.decode('latin-1')) for k, v in row.items()])
             obj = HarvestObject(guid=id, job=harvest_job,
                     content=json.dumps(row))

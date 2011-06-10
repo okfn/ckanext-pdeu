@@ -2,13 +2,10 @@
 import urllib2, urllib
 import string
 from datetime import datetime
-
+from hashlib import sha1
 import logging
 
-from ckan import model
-from ckan.model import Session
-from ckan.logic import ValidationError, NotFound
-
+from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.harvesters import HarvesterBase
 from lxml import html
 from cookielib import CookieJar
@@ -27,6 +24,8 @@ class DataPublicaHarvester(HarvesterBase):
         }
 
     gathered_ids = []
+    object_ids = []
+    job = None
     page = 1
 
     def _gather_ids(self,url = None, jar= None):
@@ -45,10 +44,14 @@ class DataPublicaHarvester(HarvesterBase):
             id = href.split('/').pop()
             if not id in self.gathered_ids:
                 log.debug('Got Id: %s' % id)
-                #self.queue(DataPublicaDatasetCrawler, url=href)
+                obj = HarvestObject(guid=sha1(id).hexdigest(), job=self.job, content=id)
+                obj.save()
+
+                self.object_ids.append(obj.id)
+
                 new_ids.append(id)
 
-        if len(new_ids) == 0: # or self.page == 2:
+        if len(new_ids) == 0 or self.page == 2:
             return self.gathered_ids
         else:
             self.gathered_ids.extend(new_ids)
@@ -63,10 +66,9 @@ class DataPublicaHarvester(HarvesterBase):
 
     def gather_stage(self,harvest_job):
         log.debug('In DataPublica gather_stage (%s)' % harvest_job.source.url)
-
+        self.job = harvest_job
         remote_ids = self._gather_ids(self.INITIAL_INDEX)
-        #remote_ids = ['20110524-36F426','20110524-10821AB','20110523-10DACE3']
-
+        return self.object_ids
         return self._create_harvest_objects(remote_ids,harvest_job)
 
 
@@ -74,7 +76,7 @@ class DataPublicaHarvester(HarvesterBase):
         log.debug('In DataPublicaHarvester fetch_stage')
         # Get URL
         url = harvest_object.source.url.rstrip('/')
-        url = url + '/en/data_set_module/' + harvest_object.guid
+        url = url + '/en/data_set_module/' + harvest_object.content
 
         # Get contents
         try:

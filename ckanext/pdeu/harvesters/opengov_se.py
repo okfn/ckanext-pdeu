@@ -7,10 +7,12 @@ try:
 except ImportError: 
     from StringIO import StringIO
 from lxml import html, etree
+from hashlib import sha1
 
 from ckanext.rdf.consume import consume_one
 from ckanext.rdf.vocab import Graph
 from ckanext.harvest.harvesters import HarvesterBase
+from ckanext.harvest.model import HarvestObject
 
 log = logging.getLogger(__name__)
 
@@ -29,17 +31,20 @@ class OpenGovSeHarvester(HarvesterBase):
         log.debug('In OpenGovSeHarvester gahter_stage')
         # Get feed contents
         doc = etree.parse(self.INDEX_URL)
-        remote_ids = []
+        ids = []
         for id_element in doc.findall('//{%(ns)s}entry/{%(ns)s}id' % {'ns':self.ATOM_NS}):
-            id = id_element.text.strip()
-            log.debug('Got id: %s' % id)
-            remote_ids.append(id)
+            link = id_element.text.strip()
+            log.debug('Got link: %s' % link)
+            id = sha1(link).hexdigest()
+            obj = HarvestObject(guid=id, job=harvest_job, content=link)
+            obj.save()
 
-        return self._create_harvest_objects(remote_ids,harvest_job)
+            ids.append(obj.id)
+        return ids
 
     def fetch_stage(self,harvest_object):
         log.debug('In OpenGovSeHarvester fetch_stage')
-        url = harvest_object.guid.strip('/') + '/rdf/'
+        url = harvest_object.content.strip('/') + '/rdf/'
         try:
             fh = urllib2.urlopen(url)
             harvest_object.content = fh.read()
