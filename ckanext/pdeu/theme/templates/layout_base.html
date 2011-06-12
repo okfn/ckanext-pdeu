@@ -29,6 +29,7 @@
   <link rel="alternate" type="application/atom+xml" title="${g.site_title} - Recent Revision History" href="${h.url_for(controller='revision', action='list', id=None, format='atom', days=1)}" />
   </py:otherwise>
   </py:choose>
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css' />
 
   <link rel="stylesheet" href="${g.site_url}/css/boilerplate.css?v=2" />
   <link rel="stylesheet" href="${g.site_url}/css/blueprint/screen.css" type="text/css" media="screen, projection" />
@@ -63,14 +64,16 @@
           <img width="32" height="32" src="${g.site_logo}" alt="${g.site_title} Logo" title="${g.site_title} Logo" id="logo" />
         </a>
         <div class="menu">
-          <form action="${url(controller='package', action='search')}" method="GET">
-            <input name="q" value="${c.q if hasattr(c, 'q') else ''}" class="search" placeholder="Find ${g.site_title} datasets" />
-          </form>
+          <span id="menusearch">
+            <form action="${url(controller='package', action='search')}" method="GET">
+              <input name="q" value="${c.q if hasattr(c, 'q') else ''}" class="search" placeholder="Find ${g.site_title} datasets" />
+            </form>
+          </span>
           <div id="mainmenu">
             <span py:if="h.am_authorized(c, actions.PACKAGE_CREATE)">${h.nav_link(c, _('Add a package'), controller='package', action='new', id=None)}</span>
             ${h.nav_link(c, _('Groups'), controller='group', action='index', id=None, highlight_actions = 'new index')}
-            ${h.nav_link(c, _('About'), controller='home', action='about', id=None)}
           </div>
+          ${h.nav_link(c, _('About'), controller='home', action='about', id=None)}
         </div>
       </header>
     </div>
@@ -172,7 +175,7 @@
           &copy; 2011:
         <img src="http://assets.okfn.org/images/logo/okf_logo_white_and_green_tiny.png" id="footer-okf-logo" />
           <a href="http://www.okfn.org/">Open Knowledge Foundation</a><br/><br/>
-        Based on the <a
+        Powered by the <a
           href="http://ckan.org">CKAN</a> data management platform.<br/>
             <a href="http://www.opendefinition.org/okd/"><img alt="This Content and Data is Open" src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" style="border: none ; margin-bottom: -4px;"/></a>
       </p>

@@ -24,33 +24,10 @@ CKAN.EuroMap = function($){
     }
 
     var onFeatureSelect = function(event){
-
         var feature = event.feature;
         selectedFeature = feature;
-
-        var html = "<div class=\"popup\">";
-        html += "<div class=\"name\">" + feature.attributes.NAME +"</div>";
-        html += "<div class=\"local_name\">" + feature.attributes.NAME_LOCAL+"</div>"
-        html += "<div class=\"packages\">";
-        if (feature.attributes.packages){
-            html += "<a href=\"http://localhost:5000/package?extras_eu_country=" + feature.attributes.NUTS + "\">" +
-                feature.attributes.packages+" packages";
-        } else {
-            html += "No packages yet";
-        }
-        html += "</a></div>"
-
-        var popup = new OpenLayers.Popup.FramedCloud("Feature Info",
-            guessBestAnchorPoint(feature.geometry),
-            null,
-            html,
-            null, true, onPopupClose);
-
-        feature.popup = popup;
-        CKAN.EuroMap.map.addPopup(popup);
-
-        return false;
-
+        document.location = "/package?extras_eu_country=" + feature.attributes.NUTS;
+        return false; 
     }
 
     var onPopupClose = function(event){
@@ -95,11 +72,11 @@ CKAN.EuroMap = function($){
         // Default properties for all rules
         var defaultStyle = new OpenLayers.Style({
             "cursor":"pointer",
-            "strokeColor":"#000000",
-            "strokeWidth":"1"
+            "strokeColor":"#ffffff",
+            "strokeWidth":"0"
         });
         var selectStyle = new OpenLayers.Style({
-            "fillColor":"#FFFFA3",
+            "fillColor":"#ffffff",
         });
 
         // Create rules according to the actual values
@@ -114,7 +91,7 @@ CKAN.EuroMap = function($){
                     value: 0
                 }),
                 symbolizer: {
-                    "fillColor":'#FFFFFF'
+                    "fillColor":'#faf4c8'
                 }
             }))
 
@@ -180,22 +157,25 @@ CKAN.EuroMap = function($){
             // Create a new map
             var map = new OpenLayers.Map("map" ,
             {
-               /*
                 projection: new OpenLayers.Projection("EPSG:900913"),
+               /*
                 displayProjection: new OpenLayers.Projection("EPSG:4326"),
                 units: "m",
                 maxResolution: 156543.0339,
                 maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
                                      20037508.34, 20037508.34),
                 */
+                //maxExtent: new OpenLayers.Bounds(-33.32,26.72,47.02,72.23),
                 maxExtent: new OpenLayers.Bounds(-33.32,26.72,47.02,72.23),
-                maxScale: 30000000,
+                //maxExtent: new OpenLayers.Bounds(-1,1,1,1),
+                /*maxScale: 30000000,
                 minScale: 6000000,
                 numZoomLevels: 3,
+                */
                 fallThrough: true,
                 controls: [
-                    new OpenLayers.Control.Navigation(),
-                    new OpenLayers.Control.PanZoomBar()
+                    //new OpenLayers.Control.Navigation(),
+                    //new OpenLayers.Control.PanZoomBar()
                 ],
                 theme:"/js/libs/openlayers/theme/default/style.css"
             });
@@ -204,7 +184,6 @@ CKAN.EuroMap = function($){
             var layers = [
             euro = new OpenLayers.Layer.Vector("Europa", {
                             strategies: [new OpenLayers.Strategy.Fixed()],
-                            //projection: new OpenLayers.Projection("EPSG:900913"),
                             protocol: new OpenLayers.Protocol.HTTP({
                                 url: "/map/data.json",
                                 format: new OpenLayers.Format.GeoJSON()

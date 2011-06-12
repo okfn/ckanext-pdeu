@@ -1,22 +1,24 @@
 #map{
-    background-color: #E9F4FF;
+    width: 420px;
+    height: 300px;
+    /*background-color: #fff;*/
 }
 
 .popup {
-   padding: 1em
+   padding: 0.2em;
 }
 
-.popup .name{
+.popup .name {
     font-weight: bold;
 }
 
-.popup .local_name{
+.popup .local_name {
     font-style: italic;
     border-bottom: 1px solid #E3E3E3;
 }
 
-.popup .packages{
-    margin-top: 1em;
+.popup .packages {
+    margin-top: 0em;
 }
 
 

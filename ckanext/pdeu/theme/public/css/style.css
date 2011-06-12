@@ -43,6 +43,10 @@ header .menu a {
   text-shadow: 1px 1px 3px #eee;
 }
 
+header .menu #mainmenu {
+  display: inline;
+}
+
 header .account {
   float: right;
 }
@@ -86,11 +90,11 @@ html, body {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -100px;
+    margin: 0 auto -230px;
 }
 
 footer, #push {
-    height: 75px;
+    height: 205px;
 }
 
 footer {
@@ -110,10 +114,25 @@ footer .xoxo h3 {
   font-size: 1.2em;
 }
 
+h1, h2, h3, h4, h5 {
+  font-family: 'Ubuntu', Georgia; 
+}
+
+a, a:visited {
+  color: #2962b3;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #183661;
+}
+
 
 /* Basic page elements */
 
 .page_heading {
+  margin-top: 1.5em;
+  margin-bottom: 1em;
   font-size: 2.2em;
   font-weight: normal;
 }

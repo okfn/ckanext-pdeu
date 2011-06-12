@@ -4,8 +4,9 @@ import ckan.lib.helpers as h
 from ckan.lib.helpers import json
 from ckan.lib.base import BaseController, c, g, request, \
                           response, session, render, config, abort, redirect
+from ckan.lib.search import query_for, QueryOptions, SearchError
 
-from ckan.model import Session,PackageExtra
+from ckan.model import Session, PackageExtra, Package
 from sqlalchemy import distinct, func
 
 
@@ -60,35 +61,32 @@ class SubscribeController(BaseController):
     def send(self):
         if not 'email' in request.params:
             abort(400,_('Please provide an email address'))
-
         email = request.params['email']
-
         row = {'email':email,'signedup': datetime.now().isoformat()}
-
         self.table.AddRecord(row)
-
         h.flash_success(_('Your email has been stored. Thank you for your interest.'))
         redirect('/')
 
 class MapController(BaseController):
 
-    def show(self):
+    def index(self):
         c.startColor = config.get('pdeu.map.start_color','#F1EEF6')
         c.endColor = config.get('pdeu.map.end_color','#045A8D')
         c.groups = config.get('pdeu.map.groups',5)
 
-        template_file = os.path.join(get_root_dir(), 'ckanext', 'pdeu', 'theme', 'templates', 'home', 'map.html')
-        return render(template_file)
+        query = query_for(Package)
+        query.run(query='*:*', facet_by=g.facets,
+                  limit=0, offset=0, username=c.user)
+        c.facets = query.facets
+        return render('home/index.html')
 
     def data(self):
-
         # Get the Europe dataset
         rootdir = get_root_dir()
         data_file = os.path.join(rootdir, 'ckanext', 'pdeu', 'data', 'eu.json')
-
         f = open(data_file,'r')
         o = json.load(f)
-        
+
         # Get the package count by country
         q = Session.query(distinct(PackageExtra.value), func.count(PackageExtra.value)) \
                    .filter(PackageExtra.key==u'eu_country') \
