@@ -64,12 +64,12 @@
           <img width="64" height="64" src="${g.site_logo}" alt="${g.site_title} Logo" title="${g.site_title} Logo" id="logo" />
         </a>
         <div id="site-name">
-          publicdata.eu &mdash; europe's public data
+          PublicData.eu &mdash; Europe's Public Data
         </div>
         <div class="menu">
           <span id="menusearch">
             <form action="${url(controller='package', action='search')}" method="GET">
-              <input name="q" value="${c.q if hasattr(c, 'q') else ''}" class="search" placeholder="Find ${g.site_title} datasets" />
+              <input name="q" value="${c.q if hasattr(c, 'q') else ''}" class="search" placeholder="Find datasets" />
             </form>
           </span>
           <div id="mainmenu">

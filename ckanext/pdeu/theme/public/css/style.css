@@ -29,10 +29,10 @@ header #site-name {
   font-family: Ubuntu, sans-serif;
   padding: 5px;
   padding-left: 82px;
-  padding-bottom: 2px;
+  padding-bottom: 5px;
   font-weight: bold;
   color: #333;
-  text-shadow: 1px 1px 3px #eee;
+  text-shadow: 1px 1px 3px #ccc;
 }
 
 header .menu form {
@@ -51,7 +51,11 @@ header .menu a {
   text-decoration: none;
   font-weight: bold;
   margin-left: 1.5em;
-  text-shadow: 1px 1px 3px #eee;
+  text-shadow: 1px 1px 3px #ccc;
+}
+
+header .menu #menusearch {
+  float: right;
 }
 
 header .menu #mainmenu {
