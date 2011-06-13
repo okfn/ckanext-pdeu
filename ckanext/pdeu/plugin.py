@@ -51,9 +51,11 @@ class PDEUCustomizations(SingletonPlugin):
         return route_map
 
     def read(self, pkg):
-        from ckan.lib.base import request, c
-        c.eu_country = pkg.extras.get('eu_country')
-        c.harvest_catalogue_name = pkg.extras.get('harvest_catalogue_name', '(Unspecified)')
-        c.harvest_catalogue_url = pkg.extras.get('harvest_catalogue_url')
-        c.harvest_dataset_url = pkg.extras.get('harvest_dataset_url')
-
+        try:
+            from ckan.lib.base import request, c
+            c.eu_country = pkg.extras.get('eu_country')
+            c.harvest_catalogue_name = pkg.extras.get('harvest_catalogue_name', '(Unspecified)')
+            c.harvest_catalogue_url = pkg.extras.get('harvest_catalogue_url')
+            c.harvest_dataset_url = pkg.extras.get('harvest_dataset_url')
+        except TypeError, te:
+            pass

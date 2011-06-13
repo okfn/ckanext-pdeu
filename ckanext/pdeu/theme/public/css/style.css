@@ -25,12 +25,12 @@ header #logo {
 }
 
 header #site-name {
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-family: Ubuntu, sans-serif;
   padding: 5px;
   padding-left: 82px;
-  padding-bottom: 5px;
-  font-weight: bold;
+  padding-bottom: 2px;
+  /*font-weight: bold;*/
   color: #333;
   text-shadow: 1px 1px 3px #ccc;
 }
