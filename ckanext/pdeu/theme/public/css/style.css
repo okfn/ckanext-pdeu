@@ -24,6 +24,17 @@ header #logo {
   float: left;
 }
 
+header #site-name {
+  font-size: 1.2em;
+  font-family: Ubuntu, sans-serif;
+  padding: 5px;
+  padding-left: 82px;
+  padding-bottom: 2px;
+  font-weight: bold;
+  color: #333;
+  text-shadow: 1px 1px 3px #eee;
+}
+
 header .menu form {
   display: inline;
 }

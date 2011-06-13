@@ -61,8 +61,11 @@
           </span>
         </div>
         <a href="${url('home')}">
-          <img width="32" height="32" src="${g.site_logo}" alt="${g.site_title} Logo" title="${g.site_title} Logo" id="logo" />
+          <img width="64" height="64" src="${g.site_logo}" alt="${g.site_title} Logo" title="${g.site_title} Logo" id="logo" />
         </a>
+        <div id="site-name">
+          publicdata.eu &mdash; europe's public data
+        </div>
         <div class="menu">
           <span id="menusearch">
             <form action="${url(controller='package', action='search')}" method="GET">
@@ -217,6 +220,7 @@
     });
   </script>
 
+  <script src="http://assets.okfn.org/banner/banner.js"></script> 
 
   <script>
     var _gaq=[["_setAccount","UA-XXXXX-X"],["_trackPageview"]]; // Change UA-XXXXX-X to be your site's ID 
