@@ -101,4 +101,7 @@ class MapController(BaseController):
             ft['properties']['packages'] = values[code] if code in values else 0
 
         response.content_type = 'application/json'
+        response.pragma = None 
+        response.cache_control = 'public; max-age: 3600'
+        response.cache_expires(seconds=3600)
         return json.dumps(o)
