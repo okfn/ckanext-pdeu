@@ -62,6 +62,11 @@
         padding: 0.5em;
       }
 
+      .banner ul {
+        list-style-type: none; 
+        padding: 0;
+      }
+
       .below {
         margin-top: 3em;
       }
@@ -83,14 +88,12 @@
     <div class="banner">
       <div class="container">
         <div class="clearfix"></div>
-        <div id="map" class="span-24 last"></div>
+        <div id="map" class=""></div>
         <h1>europe's public data</h1>
         
         <form action="/package" method="GET">
           <input name="q" placeholder="Find datasets" />
         </form>
-        <div class="clearfix"></div>   
-        <div id="map-link" style="float:right;margin-right:40px;margin-bottom: 5px"><a href="/map">View larger map [+]</a></div>
         <div class="span-6">
           <ul class="facet-options">
             <li py:for="name, count in h.facet_items(c, 'groups', limit=9)[0::2]">
@@ -105,7 +108,8 @@
             </li>
           </ul>
         </div>
-
+        <div class="clearfix"></div>   
+        <div id="map-link" style="float:right;margin-right:40px;margin-bottom: 5px"><a href="/map">View larger map [+]</a></div>
       </div>
     </div>
 
