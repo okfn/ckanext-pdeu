@@ -68,17 +68,26 @@ class SubscribeController(BaseController):
         redirect('/')
 
 class MapController(BaseController):
-
-    def index(self):
-        c.startColor = config.get('pdeu.map.start_color','#F1EEF6')
+    
+    def _get_config(self):
+#        c.startColor = config.get('pdeu.map.start_color','#F1EEF6')
+        c.startColor = config.get('pdeu.map.start_color','#E6E6E6')
         c.endColor = config.get('pdeu.map.end_color','#045A8D')
         c.groups = config.get('pdeu.map.groups',5)
+
+    def index(self):
+        self._get_config()
 
         query = query_for(Package)
         query.run(query='*:*', facet_by=g.facets,
                   limit=0, offset=0, username=c.user)
         c.facets = query.facets
         return render('home/index.html')
+
+    def show(self):
+        self._get_config()
+        return render('home/map.html')
+
 
     def data(self):
         # Get the Europe dataset
@@ -105,3 +114,6 @@ class MapController(BaseController):
         response.cache_control = 'public; max-age: 3600'
         response.cache_expires(seconds=3600)
         return json.dumps(o)
+
+
+

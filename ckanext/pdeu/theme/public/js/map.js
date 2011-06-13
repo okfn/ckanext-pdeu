@@ -23,11 +23,41 @@ CKAN.EuroMap = function($){
         }
     }
 
-    var onFeatureSelect = function(event){
+    var onFeatureSelectHomePage = function(event){
         var feature = event.feature;
         selectedFeature = feature;
         document.location = "/package?extras_eu_country=" + feature.attributes.NUTS;
         return false; 
+    }
+
+    var onFeatureSelect = function(event){
+
+        var feature = event.feature;
+        selectedFeature = feature;
+
+        var html = "<div class=\"popup\">";
+        html += "<div class=\"name\">" + feature.attributes.NAME +"</div>";
+        html += "<div class=\"local_name\">" + feature.attributes.NAME_LOCAL+"</div>"
+        html += "<div class=\"packages\">";
+        if (feature.attributes.packages){
+            html += "<a href=\"http://localhost:5000/package?extras_eu_country=" + feature.attributes.NUTS + "\">" +
+                feature.attributes.packages+" packages";
+        } else {
+            html += "No packages yet";
+        }
+        html += "</a></div>"
+
+        var popup = new OpenLayers.Popup.FramedCloud("Feature Info",
+            guessBestAnchorPoint(feature.geometry),
+            null,
+            html,
+            null, true, onPopupClose);
+
+        feature.popup = popup;
+        CKAN.EuroMap.map.addPopup(popup);
+
+        return false;
+
     }
 
     var onPopupClose = function(event){
@@ -72,11 +102,11 @@ CKAN.EuroMap = function($){
         // Default properties for all rules
         var defaultStyle = new OpenLayers.Style({
             "cursor":"pointer",
-            "strokeColor":"#ffffff",
-            "strokeWidth":"0"
+            "strokeColor":"#c6c6c6",
+            "strokeWidth":"0.8",
         });
         var selectStyle = new OpenLayers.Style({
-            "fillColor":"#ffffff",
+            "fillColor":"#faf4c8",
         });
 
         // Create rules according to the actual values
@@ -91,7 +121,7 @@ CKAN.EuroMap = function($){
                     value: 0
                 }),
                 symbolizer: {
-                    "fillColor":'#faf4c8'
+                    "fillColor":'#FFFFFF'
                 }
             }))
 
@@ -148,16 +178,22 @@ CKAN.EuroMap = function($){
     return {
         map: null,
         setup: function(){
+
+            var isHomePage = this.config.homePage;
+            var mapDiv = (isHomePage) ? "map" : "map-large";
             // Set map div size
             var w = $("#content").width()
-            $("#map").width((w < 600) ? w : 600);
-            $("#map").height((w < 400) ? w : 400);
+            $("#"+mapDiv).width((w < 600) ? w : 600);
+            $("#"+mapDiv).height((w < 400) ? w : 400);
 
+            var controls = (isHomePage) ? [] : [
+                    new OpenLayers.Control.Navigation(),
+                    new OpenLayers.Control.PanZoomBar()
+                ]
 
-            // Create a new map
-            var map = new OpenLayers.Map("map" ,
-            {
-                projection: new OpenLayers.Projection("EPSG:900913"),
+            var options = {
+                //projection: new OpenLayers.Projection("EPSG:900913"),
+                projection: new OpenLayers.Projection("EPSG:4326"),
                /*
                 displayProjection: new OpenLayers.Projection("EPSG:4326"),
                 units: "m",
@@ -168,17 +204,19 @@ CKAN.EuroMap = function($){
                 //maxExtent: new OpenLayers.Bounds(-33.32,26.72,47.02,72.23),
                 maxExtent: new OpenLayers.Bounds(-33.32,26.72,47.02,72.23),
                 //maxExtent: new OpenLayers.Bounds(-1,1,1,1),
-                /*maxScale: 30000000,
-                minScale: 6000000,
-                numZoomLevels: 3,
-                */
+                
                 fallThrough: true,
-                controls: [
-                    //new OpenLayers.Control.Navigation(),
-                    //new OpenLayers.Control.PanZoomBar()
-                ],
+                controls: controls ,
                 theme:"/js/libs/openlayers/theme/default/style.css"
-            });
+            };
+            if (!isHomePage){
+                options["maxScale"] = 30000000;
+                options["minScale"] = 6000000;
+                options["numZoomLevels"] = 3;
+
+            }
+            // Create a new map
+            var map = new OpenLayers.Map(mapDiv ,options);
 
             // Create layers to add
             var layers = [
@@ -208,8 +246,8 @@ CKAN.EuroMap = function($){
             map.addControl(selectControl);
             selectControl.activate();
 
-            euro.events.register("featureselected",this,onFeatureSelect);
-            euro.events.register("featureunselected",this,onFeatureUnselect);
+            euro.events.register("featureselected",this, (isHomePage) ? onFeatureSelectHomePage : onFeatureSelect);
+            if (!isHomePage) euro.events.register("featureunselected",this,onFeatureUnselect);
             euro.events.register("featuresadded",this,setupStyles);
 
             map.setCenter(new OpenLayers.LonLat(8.98,48.74),3);

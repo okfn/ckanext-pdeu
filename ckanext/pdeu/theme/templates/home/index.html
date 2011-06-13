@@ -74,7 +74,7 @@
     <script type="text/javascript" src="${g.site_url}/js/map.js"></script> 
     <script type="text/javascript">
         CKAN.EuroMap.config = {"startColor": "#faf4c8","endColor":
-          "#fadd03","groups": 5}
+          "#fadd03","groups": 5,"homePage":true}
     </script>
   </py:def>
 
@@ -89,6 +89,8 @@
         <form action="/package" method="GET">
           <input name="q" placeholder="Find datasets" />
         </form>
+        <div class="clearfix"></div>   
+        <div id="map-link" style="float:right;margin-right:40px;margin-bottom: 5px"><a href="/map">View larger map [+]</a></div>
         <div class="span-6">
           <ul class="facet-options">
             <li py:for="name, count in h.facet_items(c, 'groups', limit=9)[0::2]">

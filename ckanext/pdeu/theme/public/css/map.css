@@ -1,7 +1,10 @@
 #map{
     width: 420px;
     height: 300px;
-    /*background-color: #fff;*/
+}
+
+#map-large{
+    background-color: #FFFFFF
 }
 
 .popup {
@@ -18,7 +21,7 @@
 }
 
 .popup .packages {
-    margin-top: 0em;
+    margin-top: 0.5em;
 }
 
 

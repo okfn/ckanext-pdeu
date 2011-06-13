@@ -42,6 +42,7 @@ class PDEUCustomizations(SingletonPlugin):
 
         map_controller = 'ckanext.pdeu.controllers:MapController'
         route_map.connect('/', controller=map_controller, action='index')
+        route_map.connect('/map', controller=map_controller, action='show')
         route_map.connect('/map/data.json', controller=map_controller,
                           action='data')
 
