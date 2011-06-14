@@ -40,7 +40,7 @@ CKAN.EuroMap = function($){
         html += "<div class=\"local_name\">" + feature.attributes.NAME_LOCAL+"</div>"
         html += "<div class=\"packages\">";
         if (feature.attributes.packages){
-            html += "<a href=\"http://localhost:5000/package?extras_eu_country=" + feature.attributes.NUTS + "\">" +
+            html += "<a href=\"/package?extras_eu_country=" + feature.attributes.NUTS + "\">" +
                 feature.attributes.packages+" packages";
         } else {
             html += "No packages yet";
