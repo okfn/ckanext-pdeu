@@ -23,25 +23,26 @@ class PDEUCKANHarvester(CKANHarvester):
 
         super(PDEUCKANHarvester, self).import_stage(harvest_object)
 
-        # Add some extras to the newly created package
-        new_extras = {
-            'eu_country': self.config.get('eu_country',''),
-            'harvest_catalogue_name': self.config.get('harvest_catalogue_name',''),
-            'harvest_catalogue_url': harvest_object.job.source.url,
-            'harvest_dataset_url': harvest_object.job.source.url.strip('/') + '/package/' + harvest_object.package_id
-        }
+        if harvest_object.package_id:
+            # Add some extras to the newly created package
+            new_extras = {
+                'eu_country': self.config.get('eu_country',''),
+                'harvest_catalogue_name': self.config.get('harvest_catalogue_name',''),
+                'harvest_catalogue_url': harvest_object.job.source.url,
+                'harvest_dataset_url': harvest_object.job.source.url.strip('/') + '/package/' + harvest_object.package_id
+            }
 
-        for extra in ['eu_nuts1','eu_nuts2','eu_nuts3']:
-            if self.config.get(extra,''):
-                new_extras[extra] = self.config[extra]
+            for extra in ['eu_nuts1','eu_nuts2','eu_nuts3']:
+                if self.config.get(extra,''):
+                    new_extras[extra] = self.config[extra]
 
-        context = {
-            'model': model,
-            'session': Session,
-            'user': u'harvest',
-            'id': harvest_object.package_id
-        }
+            context = {
+                'model': model,
+                'session': Session,
+                'user': u'harvest',
+                'id': harvest_object.package_id
+            }
 
-        data_dict = {'extras':new_extras}
-        package_update_rest(data_dict,context)
+            data_dict = {'extras':new_extras}
+            package_update_rest(data_dict,context)
 
