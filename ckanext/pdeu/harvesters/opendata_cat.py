@@ -81,9 +81,11 @@ class OpenDataCatHarvester(HarvesterBase):
         except Exception, e:
             log.exception(e)
             self._save_object_error('%r'%e,harvest_object,'Import')
+            return None
 
         package_dict['id'] = harvest_object.guid
-        package_dict['name'] = self._gen_new_name(package_dict['title'])
+        title = package_dict['title'] or package_dict['name'] 
+        package_dict['name'] = self._gen_new_name(title)
 
         # Set the modification date
         if 'date_modified' in package_dict['extras']:
