@@ -322,19 +322,6 @@ table caption {
     padding-top: 10px;
 }
 
-.register-link a {
-    color: white; 
-    background: #199150;
-    font-weight: bold;
-    padding: 5px;
-    width: 100%;
-    font-size: 1.3em;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
-    
-}
-
 .package-search-filters {
     margin-top: 15px;
 }
@@ -647,5 +634,33 @@ ul.package_formats li {
 }
 
 
+.signup {
+  color: white; 
+  border-bottom: 0;
+  background-color: #E5ECF9;
+  padding: 15px;
+  padding-top: 10px;
+     -moz-border-radius: 15px; 
+  -webkit-border-radius: 15px; 
+          border-radius: 15px;
+  padding-bottom: 10px;
+}
 
+.signup h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.2em;
+}
+
+.subscribe {
+  float: right;
+  margin-top: -6px;
+  margin-bottom: -10px;
+}
+
+.subscribe input[type='text'] {
+  border: 1px solid #ccc;
+  padding: 4px;
+  margin-right: 10px;
+}
 
