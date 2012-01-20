@@ -1,3 +1,3 @@
 gdata>=2.0.14
--e hg+https://bitbucket.org/okfn/ckanext-rdf#egg=ckanext-rdf
--e hg+https://bitbucket.org/okfn/datautil#egg=datautil
+-e git+https://github.com/okfn/ckanext-rdf#egg=ckanext-rdf
+-e git+https://github.com/okfn/datautil#egg=datautil
