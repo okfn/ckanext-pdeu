@@ -1,3 +1,5 @@
+import sys
+
 from datautil.normalization.table_based import Formats, Licenses
 from datautil.normalization.table_based import Normalizer, NormalizerJoin
 from CREDENTIALS import GOOGLE_USER, GOOGLE_PASS
@@ -60,6 +62,9 @@ class categories(object):
                 self._assign_group(client, pkg.get('name'), data)
 
 if __name__ == '__main__':
-    traverse(categories())
+    if len(sys.argv) == 2:
+        traverse(categories(),query=sys.argv[1])
+    else:
+        traverse(categories())
 
 
