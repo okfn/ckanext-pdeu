@@ -1,14 +1,17 @@
 from pylons.i18n import _
 import os
+
+from sqlalchemy import distinct, func
+
 import ckan.lib.helpers as h
 from ckan.lib.helpers import json
 from ckan.lib.base import BaseController, c, g, request, \
                           response, session, render, config, abort, redirect
 from ckan.lib.search import query_for, QueryOptions, SearchError
 
+from ckan import model
 from ckan.model import Session, PackageExtra, Package
-from sqlalchemy import distinct, func
-
+from ckan.logic import get_action
 
 import logging
 log = logging.getLogger(__name__)
@@ -77,11 +80,20 @@ class MapController(BaseController):
 
     def index(self):
         self._get_config()
+        
+        # package search
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author}
+        data_dict = {
+            'q':'*:*',
+            'facet.field':g.facets,
+            'rows':0,
+            'start':0,
+        }
+        query = get_action('package_search')(context,data_dict)
+        c.package_count = query['count']
+        c.facets = query['facets']
 
-        query = query_for(Package)
-        query.run(query='*:*', facet_by=g.facets,
-                  limit=0, offset=0, username=c.user)
-        c.facets = query.facets
         return render('home/index.html')
 
     def show(self):
