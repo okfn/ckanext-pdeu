@@ -20,6 +20,8 @@ class PDEUCustomizations(SingletonPlugin):
                 config.get('extra_public_paths', '')])
         config['extra_template_paths'] = ','.join([template_dir,
                 config.get('extra_template_paths', '')])
+        config['ckan.template_head_end'] = '<link rel="stylesheet" href="/css/pdeu.css" type="text/css">'
+
         config['ckan.site_logo'] = '/img/logo.png'
         config['package_hide_extras'] = ' '.join(['eu_country', 
                     'harvest_catalogue_name', 
