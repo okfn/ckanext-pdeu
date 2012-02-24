@@ -1,0 +1,127 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:dc="http://purl.org/dc/terms/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dcat="http://www.w3.org/ns/dcat#"
+  typeof="dcat:Dataset"
+  about=""
+  py:strip="">
+
+  <py:def function="page_title">${c.pkg_dict.get('title', c.pkg_dict['name'])}
+  - Datasets</py:def>
+  
+  <py:def function="page_heading" property="dc:title">
+    ${c.pkg_dict['title']}
+  </py:def>
+  
+  <py:match path="primarysidebar">
+  
+    <li py:if="c.pkg.license_id" id="dataset-license" class="sidebar-section">
+      <strong>License:</strong>
+        <py:choose test="">
+          <span py:when="c.pkg.license and c.pkg.license.url"><a
+              href="${c.pkg.license.url}" rel="dc:rights">${c.pkg.license.title.split('::')[-1]}</a></span>
+          <span py:when="c.pkg.license" property="dc:rights">${c.pkg.license.title}</span>
+          <span py:when="c.pkg.license_id" property="dc:rights">${c.pkg.license_id}</span>
+        </py:choose>
+
+        <py:if test="c.pkg.isopen()">
+            <a href="http://opendefinition.org/okd/" title="This dataset satisfies the Open Definition.">
+              <img class="open-data" src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="[Open Data]" />
+            </a>
+        </py:if>
+        <py:if test="not c.pkg.isopen()">
+            <span class="closed">
+              ${h.icon('lock')}
+            </span>
+        </py:if>
+    </li>
+
+    <li py:if="c.harvest_catalogue_name" class="sidebar-section">
+    <h3>Metadata source</h3> <a href="${c.harvest_dataset_url}">Source
+      page</a> on <a
+      href="${c.harvest_catalogue_url}">${c.harvest_catalogue_name}</a>
+    </li>
+
+    <li py:if="c.eu_country" class="sidebar-section">
+      <h3>Country</h3> ${h.code_to_country(c.eu_country)}
+    </li>
+
+    <li py:if="c.pkg_dict.get('tags')" class="sidebar-section">
+      <h3>Tags</h3>
+      ${tag_list(c.pkg_dict.get('tags', ''))}
+    </li>
+
+    <li py:if="c.pkg.get_groups()" class="sidebar-section">
+      <h3>Groups</h3>
+      <ul class="groups">
+        <li py:for="group in sorted(c.pkg.get_groups(), key=lambda g: g.display_name)">
+            <a href="${h.url_for(controller='group', action='read', id=group.name)}">${group.display_name}</a>
+        </li>
+      </ul>
+    </li>
+
+    <li py:if="c.package_relationships" class="sidebar-section">
+      <h3>Related Datasets</h3>
+      <ul class="related-datasets">
+        <py:for each="pkg, relationship_str, comment in c.package_relationships">
+          <li>
+            ${h.literal(relationship_str % (h.link_to(pkg.name, h.url_for(controller="package", action="read", id=pkg.name))))}
+            <span py:if="comment is not None and len(comment)" class="relationship_comment">
+                (${comment})
+            </span>
+          </li>
+        </py:for>
+      </ul>
+    </li>
+
+    <li class="sidebar-section">
+      <h3>Other access</h3>
+            <p>
+               The information on this page (the dataset metadata) is also
+                available in these formats:
+                </p>
+                <ul>
+                    <li>
+                        <a href="${h.url_for(controller='api', register='package', action='show', id=c.pkg.name)}">
+                        JSON</a> (via the <a href="${h.url_for(controller='api', action='get_api', id=None)}">CKAN API</a>)
+                    </li>                
+                    <li py:if="'dcat_api' in config.get('ckan.plugins')">
+                        <a rel="rdfs:seeAlso" href="${url(controller='ckanext.rdf.controllers:DCatApiController', action='show', id=c.pkg.name)}">
+                        RDF-XML</a>
+                    </li>
+
+                </ul>
+       </li>
+  </py:match>
+
+  <div py:match="content">
+    <py:if test="c.pkg_revision_id">
+      <div id="revision" class="widget-container">
+        <p py:if="c.pkg_revision_not_latest">This is an old revision of this dataset, as edited <!--!by ${h.linked_user(rev.author)}-->at ${h.render_datetime(c.pkg_revision_timestamp)}. It may differ significantly from the <a href="${url(controller='package', action='read', id=c.pkg.name)}">current revision</a>.</p>
+        <p py:if="not c.pkg_revision_not_latest">This is the current revision of this dataset, as edited <!--!by ${h.linked_user(rev.author)}-->at ${h.render_datetime(c.pkg_revision_timestamp)}.</p>
+      </div>
+    </py:if>
+
+    <xi:include href="read_core.html" />
+  </div>
+
+  <py:def function="optional_head">
+    <py:if test="config.get('rdf_packages')">
+      <link rel="alternate" type="application/rdf+xml" title="RDF/XML" href="${config['rdf_packages'] + '/' + c.pkg.id + '.rdf' }" />
+      <link rel="alternate" type="application/turtle" title="RDF/Turtle" href="${config['rdf_packages'] + '/' + c.pkg.id + '.ttl' }" />
+    </py:if>
+  </py:def>
+
+  <py:def function="optional_feed">
+  <link rel="alternate" type="application/atom+xml" title="Dataset History"
+    href="${url(controller='package', action='history', id=c.pkg.name, format='atom', days=7)}" />
+  </py:def>
+
+  <xi:include href="layout.html" />
+</html>
+
