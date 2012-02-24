@@ -26,7 +26,7 @@ CKAN.EuroMap = function($){
     var onFeatureSelectHomePage = function(event){
         var feature = event.feature;
         selectedFeature = feature;
-        document.location = "/package?extras_eu_country=" + feature.attributes.NUTS;
+        document.location = "/dataset?extras_eu_country=" + feature.attributes.NUTS;
         return false; 
     }
 
