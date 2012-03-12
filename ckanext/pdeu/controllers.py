@@ -73,8 +73,7 @@ class SubscribeController(BaseController):
 class MapController(BaseController):
     
     def _get_config(self):
-#        c.startColor = config.get('pdeu.map.start_color','#F1EEF6')
-        c.startColor = config.get('pdeu.map.start_color','#E6E6E6')
+        c.startColor = config.get('pdeu.map.start_color','#FFFFFF')
         c.endColor = config.get('pdeu.map.end_color','#045A8D')
         c.groups = config.get('pdeu.map.groups',5)
 

@@ -1,31 +1,21 @@
-#map{
-    width: 420px;
-    height: 300px;
-}
 
-#map-large{
-    background-color: #FFFFFF
-}
-
-.popup {
+.leaflet-popup-content {
    padding: 0.2em;
 }
 
-.popup .name {
+.leaflet-popup-content .name {
     font-weight: bold;
 }
 
-.popup .local_name {
+.leaflet-popup-content .local_name {
     font-style: italic;
     border-bottom: 1px solid #E3E3E3;
 }
 
-.popup .packages {
+.leaflet-popup-content .datasets {
     margin-top: 0.5em;
 }
 
-
-.olPopupCloseBox  {
-        background: url("/js/libs/openlayers/img/close.png") no-repeat scroll 0 0 transparent !important;
+.leaflet-container{
+    background-color: transparent;
 }
-

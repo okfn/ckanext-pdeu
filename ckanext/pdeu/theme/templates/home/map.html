@@ -2,18 +2,20 @@
   xmlns:i18n="http://genshi.edgewall.org/i18n"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   py:strip="">
-  
+
   <py:def function="page_title">Availability map</py:def>
   <py:def function="page_heading">Availability map</py:def>
   <py:def function="optional_head">
+    <link rel="stylesheet" href="${g.site_url}/css/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="css/leaflet.ie.css" /><![endif]-->
     <link rel="stylesheet" href="${g.site_url}/css/map.css" />
   </py:def>
 
   <py:def function="optional_footer">
     <!-- Map -->
     <script type="text/javascript" src="${g.site_url}/js/libs/jquery.color.js"></script>
-    <script type="text/javascript" src="${g.site_url}/js/libs/openlayers/OpenLayers_pdeu.js"></script> 
-    <script type="text/javascript" src="${g.site_url}/js/map.js"></script> 
+    <script type="text/javascript" src="${g.site_url}/js/libs/leaflet.js"></script>
+    <script type="text/javascript" src="${g.site_url}/js/map.js"></script>
     <script type="text/javascript">
         CKAN.EuroMap.config = {"startColor": "${c.startColor}","endColor":"${c.endColor}","groups": "${c.groups}"}
     </script>
