@@ -1,3 +1,4 @@
+
 h1, h2, h3, h4, h5 {
   font-family: 'Ubuntu', Georgia;
 }
@@ -100,10 +101,13 @@ padding: 0;
 margin-top: 3em;
 }
 
-
+.banner form {
+    margin-bottom: 0;
+}
 
 .facet-options {
     margin-top: 0.5em;
+    margin-left: 0;
 }
 
 .facet-options li {
@@ -112,7 +116,6 @@ margin-top: 3em;
 }
 
 .signup {
-    color: white;
     border-bottom: 0;
     background-color: #E5ECF9;
     padding: 15px;
@@ -131,8 +134,7 @@ margin-top: 3em;
 
 .subscribe {
     float: right;
-    margin-top: -6px;
-    margin-bottom: -10px;
+    margin-bottom: 0;
 }
 
 .subscribe input[type='text'] {
