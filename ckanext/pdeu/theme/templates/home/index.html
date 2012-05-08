@@ -31,20 +31,20 @@
         <div id="map"></div>
         <h1>europe's public data</h1>
 
-        <form action="/package" method="GET">
+        <form action="/dataset" method="GET">
           <input name="q" placeholder="Find datasets" />
         </form>
         <div class="span-6">
           <ul class="facet-options">
             <li py:for="name, count in h.facet_items(c, 'groups', limit=9)[0::2]">
-              <a href="/package?groups=${name}">${h.group_name_to_title(name)}</a> (${count})
+              <a href="/dataset?groups=${name}">${h.group_name_to_title(name)}</a> (${count})
             </li>
           </ul>
         </div>
         <div class="span-6">
           <ul class="facet-options">
             <li py:for="name, count in h.facet_items(c, 'groups', limit=9)[1::2]">
-              <a href="/package?groups=${name}">${h.group_name_to_title(name)}</a> (${count})
+              <a href="/dataset?groups=${name}">${h.group_name_to_title(name)}</a> (${count})
             </li>
           </ul>
         </div>
