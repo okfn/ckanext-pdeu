@@ -37,14 +37,14 @@
         <div class="span-6">
           <ul class="facet-options">
             <li py:for="name, count in h.facet_items(c, 'groups', limit=9)[0::2]">
-              <a href="/package?groups=${name}">${h.group_name_to_title(name)}</a> (${count})
+              <a href="/dataset?groups=${name}">${h.group_name_to_title(name)}</a> (${count})
             </li>
           </ul>
         </div>
         <div class="span-6">
           <ul class="facet-options">
             <li py:for="name, count in h.facet_items(c, 'groups', limit=9)[1::2]">
-              <a href="/package?groups=${name}">${h.group_name_to_title(name)}</a> (${count})
+              <a href="/dataset?groups=${name}">${h.group_name_to_title(name)}</a> (${count})
             </li>
           </ul>
         </div>
