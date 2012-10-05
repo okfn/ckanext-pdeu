@@ -82,7 +82,7 @@ class MapController(BaseController):
         
         # package search
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
+                   'user': c.user or c.author,'for_view':True}
         data_dict = {
             'q':'*:*',
             'facet.field':g.facets,
@@ -92,6 +92,7 @@ class MapController(BaseController):
         query = get_action('package_search')(context,data_dict)
         c.package_count = query['count']
         c.facets = query['facets']
+        c.search_facets = query['search_facets']
 
         return render('home/index.html')
 

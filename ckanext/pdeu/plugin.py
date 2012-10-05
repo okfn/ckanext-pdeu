@@ -1,15 +1,15 @@
 import os
 from ckan.plugins import implements, SingletonPlugin
-from ckan.plugins import IRoutes, IConfigurer, IPackageController
+from ckan.plugins import IRoutes, IConfigurer, IPackageController,ITemplateHelpers
 
 from ckan.lib import helpers as h 
 from countries import code_to_country
-h.code_to_country = code_to_country
 
 class PDEUCustomizations(SingletonPlugin):
     implements(IRoutes)
     implements(IConfigurer, inherit=True)
     implements(IPackageController, inherit=True)
+    implements(ITemplateHelpers)
 
     def update_config(self, config):
         here = os.path.dirname(__file__)
@@ -20,7 +20,6 @@ class PDEUCustomizations(SingletonPlugin):
                 config.get('extra_public_paths', '')])
         config['extra_template_paths'] = ','.join([template_dir,
                 config.get('extra_template_paths', '')])
-        config['ckan.template_head_end'] = '<link rel="stylesheet" href="/css/pdeu.css" type="text/css">'
 
         config['ckan.site_logo'] = '/img/logo.png'
         config['package_hide_extras'] = ' '.join(['eu_country', 
@@ -62,3 +61,6 @@ class PDEUCustomizations(SingletonPlugin):
             c.harvest_dataset_url = pkg.extras.get('harvest_dataset_url')
         except TypeError, te:
             pass
+
+    def get_helpers(self):
+        return {'code_to_country':code_to_country}
