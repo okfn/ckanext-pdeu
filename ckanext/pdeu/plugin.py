@@ -15,8 +15,6 @@ class PDEUCustomizations(SingletonPlugin):
         here = os.path.dirname(__file__)
         rootdir = os.path.dirname(os.path.dirname(here))
 
-        # Disable the publicdata.eu theme
-        # We'll be making a new theme based on CKAN 2.0.
         our_public_dir = os.path.join(rootdir, 'ckanext', 'pdeu', 'theme',
                 'public')
         template_dir = os.path.join(rootdir, 'ckanext', 'pdeu', 'theme',
