@@ -1,74 +1,11 @@
-<html xmlns:py="http://genshi.edgewall.org/"
-  xmlns:i18n="http://genshi.edgewall.org/i18n"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  py:strip="">
+{% ckan_extends %}
 
-  <py:def function="page_title">Welcome to PublicData.eu - Europe's Public Data</py:def>
-  <py:def function="body_class">hide-sidebar</py:def>
-
-  <py:def function="optional_head">
-    <link rel="stylesheet" href="${h.url_for_static('/css/leaflet.css')}" />
-    <!--[if lte IE 8]><link rel="stylesheet" href="${h.url_for_static('css/leaflet.ie.css')}" /><![endif]-->
-    <link rel="stylesheet" href="${h.url_for_static('/css/map.css')}" />
-
-  </py:def>
-  <py:def function="optional_footer">
-    <!-- Map -->
-    <script type="text/javascript" src="${h.url_for_static('/js/libs/jquery.color.js')}"></script>
-    <script type="text/javascript" src="${h.url_for_static('/js/libs/leaflet.js')}"></script>
-    <script type="text/javascript" src="${h.url_for_static('/js/map.js')}"></script>
-    <script type="text/javascript">
-        CKAN.EuroMap.config = {"startColor": "#faf4c8","endColor":
-          "#fadd03","groups": 5,"homePage":true}
-    </script>
-  </py:def>
-
-  <div py:match="//div[@id='main']">
-
-    <div class="banner">
-      <div class="container">
-        <div class="clearfix"></div>
-        <div id="map"></div>
-        <h1>europe's public data</h1>
-
-        <form action="/dataset" method="GET">
-          <input name="q" placeholder="Find datasets" />
-        </form>
-        
-        <?python
-            facets = h.unselected_facet_items('groups', limit=9)
-        ?>
-        <div class="row">
-            <div class="span3">
-              <ul class="facet-options">
-                <li py:for="facet in facets[0::2]">
-                  <a href="/dataset?groups=${facet['name']}">${h.group_name_to_title(facet['name'])}</a> (${facet['count']})
-                </li>
-              </ul>
-            </div>
-            <div class="span3">
-              <ul class="facet-options">
-                <li py:for="facet in facets[1::2]">
-                  <a href="/dataset?groups=${facet['name']}">${h.group_name_to_title(facet['name'])}</a> (${facet['count']})
-                </li>
-              </ul>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        <div id="map-link" style="float:right;margin-right:40px;margin-bottom: 5px"><a href="/map">View larger map [+]</a></div>
-      </div>
-    </div>
-
-    <div id="homepage" class="below container">
-    </div>
-      <div class="container signup">
-        <form action="/subscribe" class="subscribe" method="POST">
-          <input type="text" name="email" placeholder="Your E-Mail Address" />
-          <input type="submit" value="Subscribe" class="btn" />
-        </form>
-        <h2>Stay up to date with publicdata.eu and European public data</h2>
-    </div>
+{% block secondary_content %}
+  <div class="signup">
+    <form action="/subscribe" class="subscribe" method="POST">
+      <input type="text" name="email" placeholder="Your E-Mail Address" />
+      <input type="submit" value="Subscribe" class="btn" />
+    </form>
+    <h2>Stay up to date with publicdata.eu and European public data</h2>
   </div>
-  <xi:include href="layout.html" />
-</html>
-
+{% endblock %}

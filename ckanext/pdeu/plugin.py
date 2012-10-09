@@ -17,17 +17,19 @@ class PDEUCustomizations(SingletonPlugin):
 
         # Disable the publicdata.eu theme
         # We'll be making a new theme based on CKAN 2.0.
-        #our_public_dir = os.path.join(rootdir, 'ckanext', 'pdeu', 'theme', 'public')
-        #template_dir = os.path.join(rootdir, 'ckanext', 'pdeu', 'theme', 'templates')
-        #config['extra_public_paths'] = ','.join([our_public_dir,
-        #        config.get('extra_public_paths', '')])
-        #config['extra_template_paths'] = ','.join([template_dir,
-        #        config.get('extra_template_paths', '')])
-        #config['ckan.site_logo'] = '/img/logo.png'
+        our_public_dir = os.path.join(rootdir, 'ckanext', 'pdeu', 'theme',
+                'public')
+        template_dir = os.path.join(rootdir, 'ckanext', 'pdeu', 'theme',
+                'templates')
+        config['extra_public_paths'] = ','.join([our_public_dir,
+                config.get('extra_public_paths', '')])
+        config['extra_template_paths'] = ','.join([template_dir,
+                config.get('extra_template_paths', '')])
+        config['ckan.site_logo'] = '/img/logo.png'
 
-        config['package_hide_extras'] = ' '.join(['eu_country', 
-                    'harvest_catalogue_name', 
-                    'harvest_catalogue_url', 'harvest_dataset_url', 
+        config['package_hide_extras'] = ' '.join(['eu_country',
+                    'harvest_catalogue_name',
+                    'harvest_catalogue_url', 'harvest_dataset_url',
                     'eu_nuts1', 'eu_nuts2', 'eu_nuts3'])
         config['search.facets'] = 'groups tags extras_eu_country res_format'
         config['search.facets.extras_eu_country.title'] = 'Country'

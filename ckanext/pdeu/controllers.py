@@ -47,6 +47,8 @@ class SubscribeController(BaseController):
 
     '''
     def __before__(self):
+        super(SubscribeController, self).__before__(self)
+
         # Check Google Docs parameters
         username = config.get('pdeu.gdocs.username', None)
         password = config.get('pdeu.gdocs.password', None)
