@@ -18,5 +18,25 @@
     </p>
   </section>
   {% endif %}
+
   {{ super() }}
+
+  <section class="module module-narrow module-shallow">
+    <h2 class="module-heading">Other Access</h2>
+    <p class="module-content">The information on this page (the dataset
+    metadata) is also available in these formats:</p>
+    <ul>
+      <li>
+        <a href="{{ h.url_for(controller='api', register='package', action='show', id=c.pkg.name,ver=2) }}">
+          JSON
+        </a>
+        (via the <a href="{{ h.url_for(controller='api', action='get_api', id=None,ver=2) }}">CKAN API</a>)
+      </li>
+      <li>
+        <a rel="rdfs:seeAlso" href="/dataset/{{  c.pkg_dict['name'] }}.rdf">
+          RDF-XML
+        </a>
+      </li>
+    </ul>
+  </section>
 {% endblock %}
