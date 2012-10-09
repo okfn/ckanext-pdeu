@@ -6,11 +6,9 @@ from sqlalchemy import distinct, func
 import ckan.lib.helpers as h
 from ckan.lib.helpers import json
 from ckan.lib.base import BaseController, c, g, request, \
-                          response, session, render, config, abort, redirect
-from ckan.lib.search import query_for, QueryOptions, SearchError
-
+                          response, render, config, abort, redirect
 from ckan import model
-from ckan.model import Session, PackageExtra, Package
+from ckan.model import Session, PackageExtra
 from ckan.logic import get_action
 
 import logging
