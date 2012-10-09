@@ -1,15 +1,14 @@
 import os
-from ckan.plugins import implements, SingletonPlugin
-from ckan.plugins import IRoutes, IConfigurer, IPackageController,ITemplateHelpers
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as toolkit
+import countries
 
-from ckan.lib import helpers as h 
-from countries import code_to_country
 
-class PDEUCustomizations(SingletonPlugin):
-    implements(IRoutes)
-    implements(IConfigurer, inherit=True)
-    implements(IPackageController, inherit=True)
-    implements(ITemplateHelpers)
+class PDEUCustomizations(plugins.SingletonPlugin):
+    plugins.implements(plugins.IRoutes)
+    plugins.implements(plugins.IConfigurer, inherit=True)
+    plugins.implements(plugins.IPackageController, inherit=True)
+    plugins.implements(plugins.ITemplateHelpers)
 
     def update_config(self, config):
         here = os.path.dirname(__file__)
@@ -57,13 +56,15 @@ class PDEUCustomizations(SingletonPlugin):
 
     def read(self, pkg):
         try:
-            from ckan.lib.base import request, c
-            c.eu_country = pkg.extras.get('eu_country')
-            c.harvest_catalogue_name = pkg.extras.get('harvest_catalogue_name', '(Unspecified)')
-            c.harvest_catalogue_url = pkg.extras.get('harvest_catalogue_url')
-            c.harvest_dataset_url = pkg.extras.get('harvest_dataset_url')
-        except TypeError, te:
+            toolkit.c.eu_country = pkg.extras.get('eu_country')
+            toolkit.c.harvest_catalogue_name = pkg.extras.get(
+                    'harvest_catalogue_name', '(Unspecified)')
+            toolkit.c.harvest_catalogue_url = pkg.extras.get(
+                    'harvest_catalogue_url')
+            toolkit.c.harvest_dataset_url = pkg.extras.get(
+                    'harvest_dataset_url')
+        except TypeError:
             pass
 
     def get_helpers(self):
-        return {'code_to_country':code_to_country}
+        return {'code_to_country': countries.code_to_country}
