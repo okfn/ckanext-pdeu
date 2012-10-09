@@ -1,0 +1,22 @@
+{% ckan_extends %}
+
+{% block secondary_content %}
+  {% if c.harvest_catalogue_name %}
+  <section class="module module-narrow module-shallow">
+    <h2 class="module-heading">Metadata Source</h2>
+    <p class="module-content">
+      {% if c.harvest_dataset_url %}
+        <a href="{{ c.harvest_dataset_url }}">Source page</a> on
+      {% endif %}
+      {% if c.harvest_catalogue_url %}
+        <a href="{{ c.harvest_catalogue_url }}">
+          {{ c.harvest_catalogue_name }}
+        </a>
+      {% else %}
+        {{ c.harvest_catalogue_name }}
+      {% endif %}
+    </p>
+  </section>
+  {% endif %}
+  {{ super() }}
+{% endblock %}

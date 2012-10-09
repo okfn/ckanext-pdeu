@@ -57,13 +57,17 @@ class PDEUCustomizations(plugins.SingletonPlugin):
     def read(self, pkg):
         try:
             toolkit.c.eu_country = pkg.extras.get('eu_country')
-            toolkit.c.harvest_catalogue_name = pkg.extras.get(
-                    'harvest_catalogue_name', '(Unspecified)')
-            toolkit.c.harvest_catalogue_url = pkg.extras.get(
-                    'harvest_catalogue_url')
-            toolkit.c.harvest_dataset_url = pkg.extras.get(
-                    'harvest_dataset_url')
+            if 'harvest_catalogue_name' in pkg.extras:
+                toolkit.c.harvest_catalogue_name = pkg.extras[
+                      'harvest_catalogue_name']
+            if 'harvest_catalogue_url' in pkg.extras:
+                toolkit.c.harvest_catalogue_url = pkg.extras[
+                        'harvest_catalogue_url']
+            if 'harvest_dataset_url' in pkg.extras:
+                toolkit.c.harvest_dataset_url = pkg.extras[
+                        'harvest_dataset_url']
         except TypeError:
+            # FIXME: Why are we silencing TypeError here?
             pass
 
     def get_helpers(self):
