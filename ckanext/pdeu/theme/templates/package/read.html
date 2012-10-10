@@ -3,7 +3,10 @@
 {% block secondary_content %}
   {% if c.harvest_catalogue_name %}
   <section class="module module-narrow module-shallow">
-    <h2 class="module-heading">Metadata Source</h2>
+    <h2 class="module-heading">
+      <i class="icon-info-sign"></i>
+      Metadata Source
+    </h2>
     <p class="module-content">
       {% if c.harvest_dataset_url %}
         <a href="{{ c.harvest_dataset_url }}">Source page</a> on
@@ -22,21 +25,21 @@
   {{ super() }}
 
   <section class="module module-narrow module-shallow">
-    <h2 class="module-heading">Other Access</h2>
-    <p class="module-content">The information on this page (the dataset
-    metadata) is also available in these formats:</p>
-    <ul>
-      <li>
-        <a href="{{ h.url_for(controller='api', register='package', action='show', id=c.pkg.name,ver=2) }}">
-          JSON
+    <h2 class="module-heading">
+      <i class="icon-copy"></i>
+      Other Access
+    </h2>
+    <div class="module-content">
+      <p>The information on this page (the dataset metadata) is also available in these formats:</p>
+      <p class="btn-group">
+        <a href="{{ h.url_for(controller='api', register='package', action='show', id=c.pkg.name,ver=2) }}" class="btn">
+          <i class="ckan-icon ckan-icon-json"></i> JSON
         </a>
-        (via the <a href="{{ h.url_for(controller='api', action='get_api', id=None,ver=2) }}">CKAN API</a>)
-      </li>
-      <li>
-        <a rel="rdfs:seeAlso" href="/dataset/{{  c.pkg_dict['name'] }}.rdf">
-          RDF-XML
+        <a rel="rdfs:seeAlso" href="/dataset/{{  c.pkg_dict['name'] }}.rdf" class="btn">
+          <i class="ckan-icon ckan-icon-rdfxml"></i> RDF-XML
         </a>
-      </li>
-    </ul>
+      </p>
+      <p><small>via the <a href="{{ h.url_for(controller='api', action='get_api', id=None,ver=2) }}">CKAN API</a></small></p>
+    </div>
   </section>
 {% endblock %}

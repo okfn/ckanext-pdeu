@@ -11,3 +11,16 @@
     margin: 0.5em 10px 0.5em 0;
     width: 300px;
 }
+
+.ckan-icon-json,
+.ckan-icon-rdfxml {
+	background-position: 0 0;
+	vertical-align: -1px;
+	margin-right: 2px;
+}
+.ckan-icon-json {
+	background-image: url(../images/json.png);
+}
+.ckan-icon-rdfxml {
+	background-image: url(../images/rdf.png);
+}
