@@ -30,3 +30,13 @@ Note on CKAN versions: at the time of writing the `master` branch of
 ckanext-pdeu is intended to work with CKAN 2.0 (currently the `master` branch
 of ckan).
 The `task-migrate-to-ckan-1.7` branch of ckanext-pdeu works with CKAN 1.7.
+
+## How to Load publicdata.eu's Apps & Ideas as CKAN Related Items
+
+`related.json` is a dump of the Apps & Ideas (ckanext-apps extension) that were
+on publicdata.eu as of 16th Oct 2012, made using the
+`paster ckanext-apps-migrate dump` command. You can load the Apps & Ideas into
+your CKAN database as CKAN 'Related Items' with a command like this, from your
+ckanext-pdeu directory:
+
+    paster ckanext-apps-migrate -c ../ckan/pdeu.ini load related.json
