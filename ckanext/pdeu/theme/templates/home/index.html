@@ -1,6 +1,13 @@
 {% ckan_extends %}
 
 {% block secondary_content %}
+
+  <h2>Featured Applications</h2>
+  {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_apps %}
+
+  <h2>Featured Ideas</h2>
+  {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_ideas %}
+
   <div class="signup well">
     <form action="/subscribe" class="subscribe" method="POST">
       <div class="input-append">

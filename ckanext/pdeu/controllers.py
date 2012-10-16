@@ -9,7 +9,7 @@ from ckan.lib.base import BaseController, c, g, request, \
                           response, render, config, abort, redirect
 from ckan import model
 from ckan.model import Session, PackageExtra
-from ckan.logic import get_action
+import ckan.logic as logic
 
 import logging
 log = logging.getLogger(__name__)
@@ -94,10 +94,26 @@ class MapController(BaseController):
             'rows': 0,
             'start': 0,
         }
-        query = get_action('package_search')(context, data_dict)
+        query = logic.get_action('package_search')(context, data_dict)
         c.package_count = query['count']
         c.facets = query['facets']
         c.search_facets = query['search_facets']
+
+        # Add the featured related applications to the template context.
+        data_dict = {
+            'type_filter': 'application',
+            'featured': True,
+        }
+        c.feautured_related_apps = logic.get_action('related_list')(context,
+            data_dict)
+
+        # Add the featured related ideas to the template context.
+        data_dict = {
+            'type_filter': 'idea',
+            'featured': True,
+        }
+        c.feautured_related_ideas = logic.get_action('related_list')(context,
+            data_dict)
 
         return render('home/index.html')
 
