@@ -1,3 +1,11 @@
+.pdeu-beta {
+    position: absolute;
+    top: 5px;
+    left: 140px;
+    text-indent: 0;
+    text-transform: uppercase;
+}
+
 .signup {
     background-color: #9FA7AD;
     color: #FFF;
