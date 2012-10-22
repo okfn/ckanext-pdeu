@@ -40,8 +40,5 @@ setup(
 
     [nose.plugins.0.10]
     pdeu_nose_plugin = ckanext.pdeu.pdeu_nose_plugin:PDEUNosePlugin
-
-    [paste.paster_command]
-    ckanext-apps-migrate = ckanext.pdeu.cli:CkanextAppsMigrateCommand
 	""",
 )
