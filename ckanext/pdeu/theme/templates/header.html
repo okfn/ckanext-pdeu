@@ -13,6 +13,9 @@
         </h1>
         {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
       {% endif %}
+      {% if config['pdeu.beta'] %}
+        <span class="label label-important pdeu-beta">Beta</span>
+      {% endif %}
     </hgroup>
     <div class="content">
       {% if c.userobj %}

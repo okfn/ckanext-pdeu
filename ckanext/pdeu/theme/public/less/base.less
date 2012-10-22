@@ -1,0 +1,16 @@
+// Hides white border
+.main,
+[role="main"] {
+	background-image: url(@pdeuTextureImage);
+	&::after,
+	&::before {
+		display: none;
+	}
+}
+
+.btn-primary {
+	background: @pdeuColorPrimary !important;
+	&:hover {
+		background: darken(@pdeuColorPrimary, 10) !important;
+	}
+}

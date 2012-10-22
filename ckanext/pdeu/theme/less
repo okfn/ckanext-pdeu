@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+// This file is only used to generate the pdeu.css within public/css/ and 
+// is for use if the less sheets need updating. In order to run this file:
+// 1. cd ckanext/pdeu/theme/
+// 2. npm install less
+// 3. npm install nodewatch
+// 4. (optional but recommended) add node_modules to .git/info/exclude (to ignore locally only)
+
+var path = require('path'),
+    nodeWatch = require('nodewatch'),
+    exec = require('child_process').exec,
+    watch = path.join(__dirname, 'public', 'less'),
+    lastArg = process.argv.slice().pop();
+
+function now() {
+  return new Date().toISOString().replace('T', ' ').substr(0, 19);
+}
+
+function compile(event, filename) {
+  var start = Date.now();
+
+  exec('`npm bin`/lessc ' + __dirname + '/public/less/pdeu.less > ' + __dirname + '/public/css/pdeu.css', function (err, stdout, stderr) {
+    var duration = Date.now() - start;
+
+    if (err) {
+      console.log('An error occurred running the less command:');
+      console.log(err.message);
+    }
+    else if (stderr || stdout) {
+      console.log(stdout, stderr);
+    } else {
+      console.log('[%s] recompiled in %sms', now(), duration);
+    }
+  });
+}
+
+nodeWatch.add(watch).onChange(compile);
+compile();
