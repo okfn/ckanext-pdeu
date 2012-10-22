@@ -22,7 +22,18 @@ CKAN's related items. Fields will be migrated as follows:
   CKAN related items do not support tags. All application and idea tags will be
   discarded.
 
-- TODO: image_url in related table. application_image table seems to be empty.
+- ckanext-apps stores application images in the PostgreSQL database itself,
+  whereas CKAN related items only have an image_url field and do not handle
+  hosting the image file.
+
+  The image_url column in the related table will be filled in based on the
+  application_id column in the application_image table.
+  The images themselves need to be scraped from the site running ckanext-apps
+  and hosted at these URLs. This script doesn't handle the scraping, there is
+  another script in ckanext-apps for it.
+
+- For related items of type idea the image_url column of the related table
+  will be None, ckanext-apps ideas don't have images.
 
 """
 import psycopg2
@@ -72,8 +83,14 @@ def dump(cursor):
         else:
             featured = 0
 
+        # Create the image_url cell for the related row based on the id from
+        # the application row.
+        image_url = "/migrated_application_images/{0}.png".format(
+                application_id)
+
         related_items.append((application_id, 'application', title,
-            description, url, created.strftime(DATETIME_FORMAT), featured))
+            description, image_url, url, created.strftime(DATETIME_FORMAT),
+            featured))
 
     cursor.execute("SELECT * FROM idea")
     for row in cursor.fetchall():
@@ -98,7 +115,7 @@ def dump(cursor):
         else:
             featured = 0
 
-        related_items.append((idea_id, 'idea', title, description, url,
+        related_items.append((idea_id, 'idea', title, description, None, url,
             created.strftime(DATETIME_FORMAT), featured))
 
     print json.dumps(related_items)
@@ -109,8 +126,8 @@ def load(cursor, filename):
 
     for row in json.loads(open(filename, 'r').read()):
         cursor.execute("INSERT INTO RELATED (id, type, title, description, "
-            "url, created, featured) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-            row)
+            "image_url, url, created, featured) VALUES (%s, %s, %s, %s, %s, "
+            "%s, %s, %s)", row)
 
 
 class CkanextAppsMigrateCommand(ckan.lib.cli.CkanCommand):
