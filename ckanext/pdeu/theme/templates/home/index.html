@@ -21,11 +21,14 @@
 
 {% block secondary_content %}
 
-  <h2>{{ _('Featured Applications') }}</h2>
-  {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_apps %}
-
-  <h2>{{ _('Featured Ideas') }}</h2>
-  {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_ideas %}
+  <div class="featured-apps">
+    <h2>{{ _('Featured Applications') }}</h2>
+    {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_apps %}
+  </div>
+  <div class="featured-ideas">
+    <h2>{{ _('Featured Ideas') }}</h2>
+    {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_ideas %}
+  </div>
 
   <div class="signup well">
     <form action="/subscribe" class="subscribe" method="POST">

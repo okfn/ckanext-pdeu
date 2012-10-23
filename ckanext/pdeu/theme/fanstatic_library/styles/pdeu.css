@@ -59,10 +59,10 @@ body,
   margin-right: 2px;
 }
 .ckan-icon-json {
-  background-image: url(../images/json.png);
+  background-image: url(/images/json.png);
 }
 .ckan-icon-rdfxml {
-  background-image: url(../images/rdf.png);
+  background-image: url(/images/rdf.png);
 }
 #map {
   width: 940px;
@@ -127,6 +127,41 @@ body,
   float: left;
   width: 400px;
   margin: 0 20px 0 0;
+}
+.featured-apps h2,
+.featured-ideas h2 {
+  margin: 10px 0;
+  text-shadow: 0 1px 0 #FFF;
+}
+.featured-apps h3,
+.featured-ideas h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+.featured-apps .btn,
+.featured-ideas .btn,
+.featured-apps .banner,
+.featured-ideas .banner {
+  display: none;
+}
+.featured-apps .media-item,
+.featured-ideas .media-item {
+  margin: 0 0 20px 20px;
+  width: 300px;
+  background-color: #FFF;
+  padding: 10px;
+  border-radius: 2px 2px;
+  box-shadow: 0 2px 4px #BBB;
+}
+.featured-apps .media-image,
+.featured-ideas .media-image {
+  margin-bottom: 10px;
+}
+.featured-ideas {
+  margin-bottom: 20px;
+}
+.featured-ideas .media-image {
+  display: none;
 }
 .pdeu-beta {
   position: absolute;
