@@ -11,6 +11,17 @@
           <button type="submit" value="{{ _('Search') }}">Submit</button>
         </span>
       </form>
+      {% set facets = h.unselected_facet_items('groups', limit=9) %}
+      <ul class="unstyled facets clearfix">
+        {% for facet in facets %}
+        <li>
+          <a href="/dataset?groups={{ facet.name }}">
+            <strong>{{ h.group_name_to_title(facet.name) }}</strong>
+            ({{ facet.count }})
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
     </div>
 
     {% snippet "home/snippets/map.html", startColor='#5372AA', endColor='#324D80', numGroups=c.num_groups, isHomepage=true %}
