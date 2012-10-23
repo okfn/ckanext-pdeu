@@ -87,6 +87,13 @@ body,
 .leaflet-popup-content .datasets {
   margin-top: 0.5em;
 }
+#view-map {
+  position: absolute;
+  right: 20px;
+  bottom: 0;
+  color: #FFF;
+  font-weight: bold;
+}
 .map-wrapper h1 {
   color: #000;
 }
