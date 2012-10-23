@@ -2,5 +2,14 @@
 
 {% block styles %}
   {{ super() }}
-  <link rel="stylesheet" href="/css/pdeu.css" />
+  {% resource 'ckanext-pdeu/vendor/leaflet/leaflet.css' %}
+  {#{% resource 'ckanext-pdeu/vendor/leaflet/leaflet.ie.css' %}#}
+  {% resource 'ckanext-pdeu/styles/pdeu.css' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% resource 'ckanext-pdeu/vendor/leaflet/leaflet.js' %}
+  {% resource 'ckanext-pdeu/vendor/jquery.color.js' %}
+  {% resource 'ckanext-pdeu/scripts/euromap.js' %}
 {% endblock %}

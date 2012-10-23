@@ -1,0 +1,40 @@
+#map {
+	width: 940px;
+	height: 500px;
+	&.homepage {
+		float: left;
+		width: 500px;
+		height: 300px;
+		background-color: transparent;
+	}
+}
+
+.leaflet-popup-content {
+	padding: 0.2em;
+	.name {
+		font-weight: bold;
+	}
+	.local_name {
+		font-style: italic;
+		border-bottom: 1px solid #E3E3E3;
+	}
+	.datasets {
+		margin-top: 0.5em;
+	}
+}
+
+.map-wrapper {
+	h1 {
+		color: #000;
+	}
+	#map {
+		background: #BBB url(@pdeuTextureImage);
+		border-radius: 2px;
+		margin: 20px 0;
+	}
+	.well {
+		background: #DDD url(@pdeuTextureImage);
+		border-width: 0;
+		box-shadow: none;
+	}
+}

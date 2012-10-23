@@ -10,7 +10,7 @@
 var path = require('path'),
     nodeWatch = require('nodewatch'),
     exec = require('child_process').exec,
-    watch = path.join(__dirname, 'public', 'less'),
+    watch = path.join(__dirname, 'fanstatic_library', 'styles'),
     lastArg = process.argv.slice().pop();
 
 function now() {
@@ -20,7 +20,7 @@ function now() {
 function compile(event, filename) {
   var start = Date.now();
 
-  exec('`npm bin`/lessc ' + __dirname + '/public/less/pdeu.less > ' + __dirname + '/public/css/pdeu.css', function (err, stdout, stderr) {
+  exec('`npm bin`/lessc ' + __dirname + '/fanstatic_library/styles/pdeu.less > ' + __dirname + '/fanstatic_library/styles/pdeu.css', function (err, stdout, stderr) {
     var duration = Date.now() - start;
 
     if (err) {

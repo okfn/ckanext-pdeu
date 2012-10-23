@@ -8,6 +8,9 @@
 [role="main"]::before {
   display: none;
 }
+a {
+  color: #2e4f8e;
+}
 .btn-primary {
   background: #2e4f8e !important;
 }
@@ -19,6 +22,12 @@
 }
 .masthead .site-search input {
   border-color: #090f1a;
+}
+.masthead .dropdown-menu li a {
+  color: #2e4f8e;
+}
+.masthead .dropdown-menu li a:hover {
+  background-color: #2e4f8e;
 }
 body,
 .site-footer {
@@ -55,7 +64,44 @@ body,
 .ckan-icon-rdfxml {
   background-image: url(../images/rdf.png);
 }
+#map {
+  width: 940px;
+  height: 500px;
+}
+#map.homepage {
+  float: left;
+  width: 500px;
+  height: 300px;
+  background-color: transparent;
+}
+.leaflet-popup-content {
+  padding: 0.2em;
+}
+.leaflet-popup-content .name {
+  font-weight: bold;
+}
+.leaflet-popup-content .local_name {
+  font-style: italic;
+  border-bottom: 1px solid #E3E3E3;
+}
+.leaflet-popup-content .datasets {
+  margin-top: 0.5em;
+}
+.map-wrapper h1 {
+  color: #000;
+}
+.map-wrapper #map {
+  background: #bbbbbb url('/images/texture.png');
+  border-radius: 2px;
+  margin: 20px 0;
+}
+.map-wrapper .well {
+  background: #dddddd url('/images/texture.png');
+  border-width: 0;
+  box-shadow: none;
+}
 .hero {
+  padding: 20px 0;
   background: #223a67 url('/images/texture.png');
 }
 .hero .module-dark {
@@ -66,6 +112,14 @@ body,
 }
 .hero .search-giant input {
   border-color: #152441;
+}
+.hero-primary {
+  width: 100%;
+}
+.search-box {
+  float: left;
+  width: 400px;
+  margin: 0 20px 0 0;
 }
 .pdeu-beta {
   position: absolute;
