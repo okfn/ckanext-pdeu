@@ -1,19 +1,38 @@
 {% ckan_extends %}
 
+{% block primary_content %}
+  <div class="hero-primary">
+
+    <div class="search-box module module-dark info">
+      <form class="dataset-search module-content clearfix" method="get" action="{% url_for controller='package', action='search' %}">
+        <h3 class="heading">{{ _('Search europe\'s public data') }}</h3>
+        <span class="control-group search-giant">
+          <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Find datasets') }}">
+          <button type="submit" value="{{ _('Search') }}">Submit</button>
+        </span>
+      </form>
+    </div>
+
+    {% snippet "home/snippets/map.html", startColor='#5372AA', endColor='#324D80', numGroups=c.num_groups, isHomepage=true %}
+    <a id="view-map" href="/map">{{ _('View larger map') }} <i class="icon-chevron-right"></i></a>
+
+  </div>
+{% endblock %}
+
 {% block secondary_content %}
 
-  <h2>Featured Applications</h2>
+  <h2>{{ _('Featured Applications') }}</h2>
   {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_apps %}
 
-  <h2>Featured Ideas</h2>
+  <h2>{{ _('Featured Ideas') }}</h2>
   {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_ideas %}
 
   <div class="signup well">
     <form action="/subscribe" class="subscribe" method="POST">
       <div class="input-append">
-        <input type="text" name="email" placeholder="Your E-Mail Address"><button type="submit" class="btn btn-large btn-primary">Subscribe</button>
+        <input type="text" name="email" placeholder="{{ _('Your Email Address') }}"><button type="submit" class="btn btn-large btn-primary">{{ _('Subscribe') }}</button>
       </div>
     </form>
-    <h2>Stay up to date with publicdata.eu and European public data</h2>
+    <h2>{{ _('Stay up to date with publicdata.eu and European public data') }}</h2>
   </div>
 {% endblock %}

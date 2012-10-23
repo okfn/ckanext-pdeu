@@ -31,6 +31,7 @@ class PDEUCustomizations(plugins.SingletonPlugin):
         config['search.facets'] = 'groups tags extras_eu_country res_format'
         config['search.facets.extras_eu_country.title'] = 'Country'
         config['search.facets.res_format.title'] = 'File format'
+        toolkit.add_resource('theme/fanstatic_library', 'ckanext-pdeu')
 
     def before_map(self, route_map):
         wire_controller = 'ckanext.pdeu.controllers:RewiringController'
