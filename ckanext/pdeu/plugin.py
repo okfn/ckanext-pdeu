@@ -23,6 +23,7 @@ class PDEUCustomizations(plugins.SingletonPlugin):
         config['extra_template_paths'] = ','.join([template_dir,
                 config.get('extra_template_paths', '')])
         config['ckan.site_logo'] = '/images/pdeu_logo.png'
+        config['ckan.favicon'] = '/images/pdeu_favicon.ico'
 
         config['package_hide_extras'] = ' '.join(['eu_country',
                     'harvest_catalogue_name',
