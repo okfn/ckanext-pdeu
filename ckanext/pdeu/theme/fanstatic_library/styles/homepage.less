@@ -28,9 +28,9 @@
 			a {
 				display: block;
 				padding: 2px 10px;
-				border-radius: 100px;
+				.border-radius(100px);
 				background: #EEE url(@pdeuTextureImage);
-				box-shadow: 0 1px 2px darken(@pdeuColorPrimary, 20);
+				.box-shadow(0 1px 2px darken(@pdeuColorPrimary, 20));
 				&:hover {
 					background-color: white;
 					text-decoration: none !important;
@@ -59,8 +59,8 @@
 		width: 300px;
 		background: #FFF url(@pdeuTextureImage);
 		padding: 10px;
-		border-radius: 2px 2px;
-		box-shadow: 0 2px 4px #BBB;
+		.border-radius(2px 2px);
+		.box-shadow(0 2px 4px #BBB);
 	}
 	.media-image {
 		margin-bottom: 10px;
