@@ -196,13 +196,13 @@ body,
 }
 .pdeu-beta {
   position: absolute;
-  top: 5px;
-  left: 140px;
+  bottom: 4px;
+  left: 178px;
   text-indent: 0;
   text-transform: uppercase;
-  -webkit-box-shadow: 0 1px 1px #223a67;
-  -moz-box-shadow: 0 1px 1px #223a67;
-  box-shadow: 0 1px 1px #223a67;
+  -webkit-box-shadow: 0 0 1px #223a67;
+  -moz-box-shadow: 0 0 1px #223a67;
+  box-shadow: 0 0 1px #223a67;
 }
 .attribution p {
   float: left;
