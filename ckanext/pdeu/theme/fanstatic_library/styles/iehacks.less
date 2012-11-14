@@ -1,0 +1,23 @@
+.ie9,
+.ie8,
+.ie7 {
+	.masthead,
+	.site-footer {
+		filter: none;
+	}
+	.masthead nav ul li a.active {
+		background-color: darken(@pdeuColorPrimary, 10);
+		border-bottom-color: lighten(@pdeuColorPrimary, 5);
+	}
+}
+
+.ie8,
+.ie7 {
+	.main,
+	[role="main"] {
+		&:after,
+		&:before {
+			display: none;
+		}
+	}
+}

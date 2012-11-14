@@ -211,3 +211,27 @@ body,
   margin-left: 10px;
   margin-bottom: 20px;
 }
+.ie9 .masthead,
+.ie8 .masthead,
+.ie7 .masthead,
+.ie9 .site-footer,
+.ie8 .site-footer,
+.ie7 .site-footer {
+  filter: none;
+}
+.ie9 .masthead nav ul li a.active,
+.ie8 .masthead nav ul li a.active,
+.ie7 .masthead nav ul li a.active {
+  background-color: #223a67;
+  border-bottom-color: #345aa1;
+}
+.ie8 .main:after,
+.ie7 .main:after,
+.ie8 [role="main"]:after,
+.ie7 [role="main"]:after,
+.ie8 .main:before,
+.ie7 .main:before,
+.ie8 [role="main"]:before,
+.ie7 [role="main"]:before {
+  display: none;
+}
