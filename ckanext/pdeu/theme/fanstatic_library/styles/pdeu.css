@@ -17,17 +17,33 @@ a {
 .btn-primary:hover {
   background: #223a67 !important;
 }
-.masthead {
+header.masthead {
   background: #2e4f8e url('/images/texture.png');
 }
-.masthead .site-search input {
+header.masthead .site-search input {
   border-color: #090f1a;
 }
-.masthead .dropdown-menu li a {
+header.masthead .dropdown-menu li a {
   color: #2e4f8e;
 }
-.masthead .dropdown-menu li a:hover {
+header.masthead .dropdown-menu li a:hover {
   background-color: #2e4f8e;
+}
+header.masthead .navigation ul.unstyled li a.active {
+  background: #223a67 url('/images/texture.png');
+  -webkit-box-shadow: inset 0 2px 4px #152441;
+  -moz-box-shadow: inset 0 2px 4px #152441;
+  box-shadow: inset 0 2px 4px #152441;
+}
+header.masthead .account {
+  background: #223a67 url('/images/texture.png');
+}
+header.masthead .account .button {
+  background-color: #345aa1;
+}
+header.masthead .account .open .button,
+header.masthead .account .button:hover {
+  background-color: #597fc9 !important;
 }
 body,
 .site-footer {

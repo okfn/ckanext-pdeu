@@ -1,4 +1,4 @@
-.masthead {
+header.masthead {
 	background: @pdeuColorPrimary url(@pdeuTextureImage);
 	.site-search input {
 		border-color: darken(@pdeuColorPrimary, 30);
@@ -7,6 +7,20 @@
 		color: @pdeuColorPrimary;
 		&:hover {
 			background-color: @pdeuColorPrimary;
+		}
+	}
+	.navigation ul.unstyled li a.active {
+		background: darken(@pdeuColorPrimary, 10) url(@pdeuTextureImage);
+		.box-shadow(inset 0 2px 4px darken(@pdeuColorPrimary, 20));
+	}
+	.account {
+		background: darken(@pdeuColorPrimary, 10) url(@pdeuTextureImage);
+		.button {
+			background-color: lighten(@pdeuColorPrimary, 5);
+		}
+		.open .button,
+		.button:hover {
+			background-color: lighten(@pdeuColorPrimary, 20) !important;
 		}
 	}
 }
