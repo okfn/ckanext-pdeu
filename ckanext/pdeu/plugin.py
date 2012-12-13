@@ -1,6 +1,9 @@
 import os
+import re
+
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+
 import countries
 
 
@@ -9,6 +12,20 @@ class PDEUCustomizations(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
+
+    def before_index(self, dataset_dict):
+
+        # Change the Data Publica harvester's '2010-07-19T13:36:00'-formatted
+        # date strings into SOLR-compatible '1995-12-31T23:59:59Z' ones.
+        regex = ('^(?P<year>\d\d\d\d)-(?P<month>\d\d)-(?P<day>\d\d)'
+            'T(?P<hours>\d\d):(?P<minutes>\d\d):(?P<seconds>\d\d)$')
+        new_format = '{year}-{month}-{day}T{hours}:{minutes}:{seconds}Z'
+        for date_key in ('deposit_date', 'update_date'):
+            old_date_str = dataset_dict.get(date_key)
+            if old_date_str:
+                match = re.match(regex, old_date_str)
+                dataset_dict[date_key] = new_format.format(**match.groupdict())
+        return dataset_dict
 
     def update_config(self, config):
         here = os.path.dirname(__file__)
