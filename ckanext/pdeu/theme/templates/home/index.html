@@ -32,13 +32,16 @@
 
 {% block secondary_content %}
 
-  <div class="featured-apps">
-    <h2>{{ _('Featured Applications') }}</h2>
-    {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_apps %}
-  </div>
-  <div class="featured-ideas">
-    <h2>{{ _('Featured Ideas') }}</h2>
-    {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_ideas %}
+  <div class="showcase">
+    <h1><a href="http://opendatachallenge.org/" target="_blank">Open Data Showcase</a></h2>
+    <div class="featured-apps">
+      <h2>{{ _('Featured Applications') }}</h3>
+      {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_apps %}
+    </div>
+    <div class="featured-ideas">
+      <h2>{{ _('Featured Ideas') }}</h3>
+      {% snippet "related/snippets/related_list.html", related_items=c.feautured_related_ideas %}
+    </div>
   </div>
 
   <div class="signup well">

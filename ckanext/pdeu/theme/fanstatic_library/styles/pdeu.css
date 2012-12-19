@@ -171,8 +171,14 @@ body,
   background-color: white;
   text-decoration: none !important;
 }
+.showcase h1 {
+  font-size: 26px;
+  margin: 10px 0;
+  text-shadow: 0 1px 0 #FFF;
+}
 .featured-apps h2,
 .featured-ideas h2 {
+  font-size: 21px;
   margin: 10px 0;
   text-shadow: 0 1px 0 #FFF;
 }
@@ -203,6 +209,9 @@ body,
 .featured-apps .media-image,
 .featured-ideas .media-image {
   margin-bottom: 10px;
+}
+.featured-apps .media-item {
+  min-height: 240px;
 }
 .featured-ideas {
   margin-bottom: 20px;
