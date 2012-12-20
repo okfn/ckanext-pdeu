@@ -29,7 +29,7 @@ header.masthead .dropdown-menu li a {
 header.masthead .dropdown-menu li a:hover {
   background-color: #2e4f8e;
 }
-header.masthead .navigation ul.unstyled li a.active {
+header.masthead .navigation ul.unstyled li.active a {
   background: #223a67 url('/images/texture.png');
   -webkit-box-shadow: inset 0 2px 4px #152441;
   -moz-box-shadow: inset 0 2px 4px #152441;
