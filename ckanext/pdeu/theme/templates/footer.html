@@ -1,4 +1,15 @@
 {% ckan_extends %}
+
+{% block footer_links %}
+  <li><a href="/about">About {{ g.site_title }}</a></li>
+  <li><a href="http://lod2.okfn.org/">Blog</a></li>
+  <li><a href="http://docs.ckan.org/en/latest/api.html">API</a></li>
+  <li><a href="http://www.okfn.org/contact/">Contact Us</a></li>
+  <li><a href="http://www.okfn.org/privacy-policy/">Privacy Policy</a></li>
+  <li><a href="http://www.opendefinition.org/okd/"><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png"></a></li>
+  <li><a href="http://www.okfn.org/">Open Knowledge Foundation</a></li>
+{% endblock %}
+
 {% block footer_attribution %}
 	{{ super() }}
 	<p class="lod2-attribution">
