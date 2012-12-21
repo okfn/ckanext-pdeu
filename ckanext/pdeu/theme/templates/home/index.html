@@ -5,7 +5,7 @@
 
     <div class="search-box module module-dark info">
       <form class="dataset-search module-content clearfix" method="get" action="{% url_for controller='package', action='search' %}">
-        <h3 class="heading">{{ _("Search Europe's public data") }}</h3>
+        <h3 class="heading">{{ _("Search Europe's Public Data") }}</h3>
         <span class="control-group search-giant">
           <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Find datasets') }}">
           <button type="submit" value="{{ _('Search') }}">Submit</button>
