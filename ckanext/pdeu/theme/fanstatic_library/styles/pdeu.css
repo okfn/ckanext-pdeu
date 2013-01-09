@@ -219,6 +219,31 @@ body,
 .featured-ideas .media-image {
   display: none;
 }
+.about .span8 {
+  border-right: 1px dotted #DDD;
+  padding-right: 20px;
+}
+.about .span3 {
+  width: 229px;
+}
+.about .page-header {
+  height: 50px;
+}
+.about .page-header .nav-pills li {
+  margin: 0 5px;
+}
+.about .page-header .nav-pills li a {
+  background-color: #FFF;
+  border: 1px solid #CCC;
+}
+.about .page-header .nav-pills li a i {
+  margin-right: 4px;
+}
+.about .page-header .nav-pills li a:hover {
+  background-color: #333;
+  color: #FFF;
+  border-color: #000;
+}
 .pdeu-beta {
   position: absolute;
   bottom: 4px;
