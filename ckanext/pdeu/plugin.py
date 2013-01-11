@@ -1,5 +1,8 @@
 import os
 import re
+import json
+
+import requests
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -12,6 +15,7 @@ class PDEUCustomizations(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IActions)
 
     def before_index(self, dataset_dict):
 
@@ -91,3 +95,79 @@ class PDEUCustomizations(plugins.SingletonPlugin):
 
     def get_helpers(self):
         return {'code_to_country': countries.code_to_country}
+
+    def get_actions(self):
+        '''Return a dict of action functions provided by this plugin.
+
+        See IActions.
+
+        '''
+        return {"import_csv2rdf_links": self.import_csv2rdf_links}
+
+    def import_csv2rdf_links(self, context, data_dict):
+        '''Import links from CSV2RDF into CKAN.
+
+        '''
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.debug('Hallo weiter, ich bin ckanext.pdeu.plugin')
+        # TODO: Auth!
+
+        # Fetch the list of resource IDs from csv2rdf.
+        r = requests.get('http://csv2rdf.aksw.org/get_exposed_rdf_list')
+        assert r.ok
+        resource_ids = json.loads(r.content)
+
+        # Get the site user dict so we can call action functions and get past
+        # the authorization.
+        site_user = toolkit.get_action('get_site_user')(
+                {'ignore_auth': True, }, {})
+
+        # Add/update the RDF links in the CKAN database.
+        context = {'user': site_user['name']}
+        for resource_id in resource_ids:
+
+            # Get the resource dict from CKAN.
+            data_dict = {'id': resource_id}
+            resource = toolkit.get_action('resource_show')(context, data_dict)
+            # TODO: Handle errors from resource_show e.g. unknown resource
+
+            # Generate the rdf_mapping and rdf_data URLs, add them to data_dict
+            # if they are not already in resource.
+            rdf_mapping = 'http://wiki.publicdata.eu/wiki/Csv2rdf:{0}'.format(
+                    resource_id)
+            if resource.get('rdf_mapping') != rdf_mapping:
+                data_dict['rdf_mapping'] = rdf_mapping
+            rdf_data = ('http://csv2rdf.aksw.org/sparqlified/{0}'
+                '_default-tranformation-configuration.rdf'.format(resource_id))
+            if resource.get('rdf_data') != rdf_data:
+                data_dict['rdf_data'] = rdf_data
+
+            # Update the resource, if necessary.
+            if 'rdf_mapping' in data_dict or 'rdf_data' in data_dict:
+                data_dict['url'] = resource['url']
+                toolkit.get_action('resource_update')(context, data_dict)
+                # TODO: Check result from resource_update.
+                logger.debug('Added RDF links to resource {0}'.format(
+                    resource_id))
+            else:
+                logger.debug(
+                    'Added RDF link already present int resource {0}'.format(
+                    resource_id))
+
+        # Remove RDF links from the CKAN database, for any resources no longer
+        # in the list of resource IDs from csv2rdf.
+        datasets = toolkit.get_action('current_package_list_with_resources')(
+                context, {})
+        for dataset in datasets:
+            for resource in dataset['resources']:
+                if resource['id'] not in resource_ids:
+                    if 'rdf_mapping' in resource or 'rdf_data' in resource:
+                        del resource['rdf_mapping']
+                        del resource['rdf_data']
+                        toolkit.get_action('resource_update')(context,
+                                resource)
+                        # TODO: Check result from resource_update.
+                        logger.debug(
+                                'Removed RDF links from resource {0}'.format(
+                                    resource_id))
