@@ -244,27 +244,6 @@ body,
 .about .span3 .mid-paragraph a {
   margin-right: 15px;
 }
-.about .page-header .nav-pills {
-  position: absolute;
-  top: 9px;
-  right: 9px;
-}
-.about .page-header .nav-pills li {
-  margin: 0 5px;
-}
-.about .page-header .nav-pills li a {
-  background-color: #FFF;
-  border: 1px solid #CCC;
-  padding: 7px 10px 5px 10px;
-}
-.about .page-header .nav-pills li a i {
-  margin-right: 4px;
-}
-.about .page-header .nav-pills li a:hover {
-  background-color: #333;
-  color: #FFF;
-  border-color: #000;
-}
 .pdeu-beta {
   position: absolute;
   bottom: 4px;
