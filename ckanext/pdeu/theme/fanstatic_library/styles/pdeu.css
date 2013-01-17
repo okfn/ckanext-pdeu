@@ -219,15 +219,35 @@ body,
 .featured-ideas .media-image {
   display: none;
 }
+.about h2 {
+  margin-bottom: 5px;
+}
+.about h3 {
+  margin-bottom: 10px;
+}
+.about .tab-content {
+  display: block;
+}
 .about .span8 {
   border-right: 1px dotted #DDD;
   padding-right: 20px;
 }
 .about .span3 {
-  width: 229px;
+  border-left: 1px dotted #DDD;
+  padding-left: 20px;
+  width: 228px;
+  margin-left: -1px;
 }
-.about .page-header {
-  height: 50px;
+.about .span3 .mid-paragraph {
+  margin: 15px 0;
+}
+.about .span3 .mid-paragraph a {
+  margin-right: 15px;
+}
+.about .page-header .nav-pills {
+  position: absolute;
+  top: 9px;
+  right: 9px;
 }
 .about .page-header .nav-pills li {
   margin: 0 5px;
@@ -235,6 +255,7 @@ body,
 .about .page-header .nav-pills li a {
   background-color: #FFF;
   border: 1px solid #CCC;
+  padding: 7px 10px 5px 10px;
 }
 .about .page-header .nav-pills li a i {
   margin-right: 4px;
