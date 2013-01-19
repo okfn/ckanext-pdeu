@@ -1,97 +1,90 @@
 {% ckan_extends %}
 
-{% block breadcrumb %}
+{% block breadcrumb_content %}
+  <li class="active"><a href="#">About {{ g.site_title }}</a></li>
+{% endblock %}
+
+{% block actions_content %}
+  <li><a href="http://lod2.okfn.org/" target="_blank" class="btn"><i class="icon-rss"></i> Project blog</a></li>
+  <li><a href="http://github.com/okfn/ckanext-pdeu" target="_blank" class="btn"><i class="icon-github"></i> Source Code</a></li>
 {% endblock %}
 
 {% block primary %}
   <article class="module about">
     <header class="module-content page-header">
-      <ul class="nav nav-pills pull-right">
-        <li><a href="http://lod2.okfn.org/" class="_blank"><i class="icon-rss"></i> Project blog</a></li>
-        <li><a href="http://github.com/okfn/ckanext-pdeu" class="_blank"><i class="icon-github"></i> Source Code</a></li>
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#about" data-toggle="tab">Overview</a></li>
+        <li><a href="#vision" data-toggle="tab">The vision</a></li>
       </ul>
-      <h1 class="page-heading">{{ _('About') }} {{ g.site_title }}</h1>
     </header>
 
     <div class="module-content">
       <div class="row">
-        <div class="span8">
-          <h3>What is {{ g.site_title }}?</h3>
-          <p>{{ g.site_title }} provides access to open, freely reusable datasets
-          from numerous local, regional and national public bodies across Europe.</p>
+        <div class="span8 tab-content">
 
-          <h3>What does {{ g.site_title }} do?</h3>
-          <p>{{ g.site_title }} aims to:</p>
-          <ul>
-            <li>Provide a single point of access to official open datasets from
-            across Europe.</li>
-            <li>Overcome language barriers by aggregating datasets from official
-            sites in multiple languages.</li>
-            <li>Provide licensing information for datasets and metadata about
-            datasets so that data users know what they can and cannot do with it.</li>
-            <li>Enable users to browse and explore datasets by region, subject
-            matter, format and so on.</li>
-            <li>Provide users with a personalised view to enable them to follow
-            datasets, groups and users relevant to their interests.</li>
-          </ul>
+          <div class="tab-pane active" id="about">
+            <h2>What is {{ g.site_title }}?</h2>
+            <p class="lead">
+              {{ g.site_title }} is a Pan European data portal, providing access to open, freely reusable datasets from numerous local, regional and national public bodies across Europe.
+            </p>
 
-          <h3>What is the vision behind {{ g.site_title }}?</h3>
+            <h3>What does {{ g.site_title }} do?</h3>
+            <p>{{ g.site_title }} aims to:</p>
+            <ul>
+              <li>Provide a <strong>single point of access</strong> to official open datasets from across Europe (It can be difficult to find datasets on official websites as they are  often buried deep into the websites)</li>
+              <li>Overcome <strong>language barriers</strong> by aggregating datasets from official websites of public bodies in different countries, in multiple languages</li>
+              <li>Provide <strong>licensing information</strong> for datasets and metadata about datasets so that data users know what they can and cannot do with it.</li>
+              <li>Enable users to <strong>browse, explore and compare</strong> datasets by region, subject matter and format</li>
+              <li>Offer users with a <strong>personalised view</strong> enabling them to follow datasets, groups and users relevant to their interests.</li>
+            </ul>
+          </div>
 
-          <p>Over the past 18 months there has been an explosion of interest in opening up official information for the public to reuse. At a national level, numerous member states now have national data catalogues, from the <a href="http://bit.ly/dk-cat">Digitalisér.dk data portal run by the Danish National IT and Telecom Agency</a> to the UK&#8217;s <a href="http://www.data.gov.uk">data.gov.uk</a> site, launched under the direction of the founder of the World Wide Web, Sir Tim Berners-Lee.</p>
+          <div class="tab-pane" id="vision">
+            <h2>What is the vision behind {{ g.site_title }}?</h2>
 
-          <p>There are countless city level initiatives across Europe as well – from Helsinki to Munich, Paris to Zaragoza. As many open data city as exist now, still even more initiatives exist in the pipeline with plans to launch in the next 6 to 12 months. This deluge of open, freely reusable data creates significant social and economic opportunities for European citizens.</p>
+            {% set months = 18 %}
 
-          <p>New digital services enable users to have information they are interested in delivered directly to them via email, web or mobile updates. For example, in the UK, <a href="http://www.theyworkforyou.com/">TheyWorkForYou</a> lets users know every time their elected representative speaks or when a topic of interest to them is discussed in the British Parliament. Large complex datasets can be broken down and presented in more intuitive ways. For example the <a href="http://wheredoesmymoneygo.org/">WhereDoesMyMoneyGo</a> project allows users to see where their taxes go using simple and intuitive  data visualisation technologies in order to demystify a complex subject.</p>
+            <p>Over the past {{ months }} months there has been an explosion of interest in opening up official information for the public to reuse. At a national level, numerous member states now have national data catalogues, from the <a href="http://bit.ly/dk-cat" target="_blank">Digitalisér.dk data portal run by the Danish National IT and Telecom Agency</a> to the UK&#8217;s <a href="http://www.data.gov.uk" target="_blank">data.gov.uk</a> site, launched under the direction of the founder of the World Wide Web, Sir Tim Berners-Lee.</p>
 
-          <p>Efforts are underway to <a href="http://linkeddata.org/">link and combine a large number of datasets from a large number of different sources</a>. This newfound data integration will ultimately allow developers to create new digital services capable of dealing with increasingly sophisticated questions and queries.</p>
+            <p>There are countless city level initiatives across Europe as well – from Helsinki to Munich, Paris to Zaragoza. As many open data city as exist now, still even more initiatives exist in the pipeline with plans to launch in the next 6 to 12 months. This deluge of open, freely reusable data creates significant social and economic opportunities for European citizens.</p>
 
-          <p>In addition to increasing transparency and improving public service delivery, open data creates opportunities for businesses to build new kinds of commercial services around this new data. This is because the data is published in a way which makes it legally and technically easy for anyone to reuse for any purpose. A recent study estimates the market based on European public sector information could be worth as much as €27 billion (see the 2006 <a href="http://bit.ly/mepsir">MEPSIR study</a>).</p>
+            <p>New digital services enable users to have information they are interested in delivered directly to them via email, web or mobile updates. For example, in the UK, <a href="http://www.theyworkforyou.com/" target="_blank">TheyWorkForYou</a> lets users know every time their elected representative speaks or when a topic of interest to them is discussed in the British Parliament. Large complex datasets can be broken down and presented in more intuitive ways. For example the <a href="http://wheredoesmymoneygo.org/" target="_blank">WhereDoesMyMoneyGo</a> project allows users to see where their taxes go using simple and intuitive  data visualisation technologies in order to demystify a complex subject.</p>
 
-          <p>In order to unlock the potential of digital public sector information, developers and other prospective users must be able to find datasets they are interested in reusing. PublicData.eu will provide a single point of access to open, freely reusable datasets from numerous national, regional and local public bodies throughout Europe.</p>
+            <p>Efforts are underway to <a href="http://linkeddata.org/" target="_blank">link and combine a large number of datasets from a large number of different sources</a>. This newfound data integration will ultimately allow developers to create new digital services capable of dealing with increasingly sophisticated questions and queries.</p>
 
-          <p>Information about European public datasets is currently scattered across many different data catalogues, portals and websites in many different languages, implemented using many different technologies. The kinds of information stored about public datasets may vary from country to country, and from registry to registry. PublicData.eu will harvest and federate this information to enable users to search, query, process, cache and perform other automated tasks on the data from a single place. This helps to solve the &#8220;discoverability problem&#8221; of finding interesting data across many different government websites, at many different levels of government, and across the many governments in Europe.</p>
+            <p>In addition to increasing transparency and improving public service delivery, open data creates opportunities for businesses to build new kinds of commercial services around this new data. This is because the data is published in a way which makes it legally and technically easy for anyone to reuse for any purpose. A recent study estimates the market based on European public sector information could be worth as much as €27 billion (see the 2006 <a href="http://bit.ly/mepsir" target="_blank">MEPSIR study</a>).</p>
 
-          <p>In addition to providing access to official information about datasets from public bodies, PublicData.eu will capture (proposed) edits, annotations, comments and uploads from the broader community of public data users. In this way, PublicData.eu will harness the social aspect of working with data to create opportunities for mass collaboration. For example, a web developer might download a dataset, convert it into a new format, upload it and add a link to the new version of the dataset for others to use. From fixing broken URLs or typos in descriptions to substantive comments or supplementary documentation about using the datasets, PublicData.eu will provide up to date information for data users, by data users.</p>
+            <p>In order to unlock the potential of digital public sector information, developers and other prospective users must be able to find datasets they are interested in reusing. PublicData.eu will provide a single point of access to open, freely reusable datasets from numerous national, regional and local public bodies throughout Europe.</p>
 
-          <p>Non-technical users, including researchers, journalists, ordinary citizens, will be able to use PublicData.eu to browse data and be able to find answers to questions. This will be accomplished through providing basic data analysis and visualisation tools together with more in-depth resources for those looking to dig deeper into the data. Users will be able to personalise their data browsing experience by being able to save links and create notes and comments on datasets.</p>
+            <p>Information about European public datasets is currently scattered across many different data catalogues, portals and websites in many different languages, implemented using many different technologies. The kinds of information stored about public datasets may vary from country to country, and from registry to registry. PublicData.eu will harvest and federate this information to enable users to search, query, process, cache and perform other automated tasks on the data from a single place. This helps to solve the &#8220;discoverability problem&#8221; of finding interesting data across many different government websites, at many different levels of government, and across the many governments in Europe.</p>
 
-          <h3>What problems is {{ g.site_title }} responding to?</h3>
+            <p>In addition to providing access to official information about datasets from public bodies, PublicData.eu will capture (proposed) edits, annotations, comments and uploads from the broader community of public data users. In this way, PublicData.eu will harness the social aspect of working with data to create opportunities for mass collaboration. For example, a web developer might download a dataset, convert it into a new format, upload it and add a link to the new version of the dataset for others to use. From fixing broken URLs or typos in descriptions to substantive comments or supplementary documentation about using the datasets, PublicData.eu will provide up to date information for data users, by data users.</p>
 
-          <p>Following are some problems and scenarios that PublicData.eu could help to respond to:</p>
-
-          <ul>
-            <li>It can be difficult to find datasets on official websites (e.g. often datasets are buried deep in websites, little or no relevant metadata for search engines, etc)</li>
-            <li>Links may be broken (cf. <a href="http://www.ijdc.net/index.php/ijdc/article/viewFile/106/81">John Sheridan et al’s 2009 study on broken links in Hansard</a>)</li>
-            <li>Those looking for public datasets may have to trawl many different government websites (local, regional, national, …).</li>
-            <li>There may be language barriers to finding datasets on the websites of public bodies in different countries.</li>
-            <li>Licensing of government data is not clear so its not clear what users can and can’t do with it</li>
-            <li>Lots of material is only available via a web interface, not available for download in bulk</li>
-            <li>For some types of information it is desirable to aggregate/compare data from many different member states, which is currently very difficult.</li>
-            <li>Currently most official EU data catalogues do not have any mechanism to capture value added to the datasets (or metadata about datasets) by users.</li>
-          </ul>
+            <p>Non-technical users, including researchers, journalists, ordinary citizens, will be able to use PublicData.eu to browse data and be able to find answers to questions. This will be accomplished through providing basic data analysis and visualisation tools together with more in-depth resources for those looking to dig deeper into the data. Users will be able to personalise their data browsing experience by being able to save links and create notes and comments on datasets.</p>
+          </div>
 
         </div>
 
         <aside class="span3">
 
-          <p><a href="http://okfn.org"><img src="http://m.okfn.org/images/logo/logo_fullname_medium.png" /></a></p>
+          <p><a href="http://okfn.org" target="_blank"><img src="http://m.okfn.org/images/logo/logo_fullname_medium.png" height="50"></a></p>
 
-          <p>{{ g.site_title }} is developed by the <a href="http://okfn.org">Open Knowledge Foundation</a>, a UK-based non-profit
-          as part of the <a href="http://lod2.eu">LOD2 ("Creating knowledge out of interlinked data")</a>
-          project. LOD2 is an ICT research project <a href="http://cordis.europa.eu/fetch?CALLER=PROJ_ICT&amp;ACTION=D&amp;CAT=PROJ&amp;RCN=95562">financed under</a> the European Commission's 7th Framework Programme.</p>
+          <p>{{ g.site_title }} is developed by the <a href="http://okfn.org" target="_blank">Open Knowledge Foundation</a>, a UK-based non-profit
+          as part of the <a href="http://lod2.eu" target="_blank">LOD2 ("Creating knowledge out of interlinked data")</a>
+          project. LOD2 is an ICT research project <a href="http://cordis.europa.eu/fetch?CALLER=PROJ_ICT&amp;ACTION=D&amp;CAT=PROJ&amp;RCN=95562" target="_blank">financed under</a> the European Commission's 7th Framework Programme.</p>
 
-          <p>
-            <a href="http://lod2.eu"><img src="/img/lod2.png" alt="LOD2" style="margin-right: 2em;"/></a>
-            <img src="http://lod2.eu/extensions/site/sites/lod2/img/logo-7fp.png" alt="7FP" />
+          <p class="mid-paragraph">
+            <a href="http://lod2.eu" target="_blank"><img src="/img/lod2.png" alt="LOD2" height="50"></a>
+            <img src="http://lod2.eu/extensions/site/sites/lod2/img/logo-7fp.png" alt="7FP" height="50">
           </p>
 
-          <p>PublicData.eu is powered by <a href="http://ckan.org">CKAN</a>, a data
+          <p>PublicData.eu is powered by <a href="http://ckan.org" target="_blank">CKAN</a>, a data
           catalogue system used by various institutions and communities to manage open
           data. CKAN and all its components are open source software and used by a wide
           community of catalogue operators from across Europe, including the UK
           Government's data.gov.uk portal.</p>
 
-          <p><a href="http://ckan.org"><img src="http://assets.okfn.org/p/ckan/img/ckan_logo_shortname.png"></a></p>
+          <p><a href="http://ckan.org/" target="_blank"><img src="http://assets.okfn.org/p/ckan/img/ckan_logo_shortname.png" height="50"></a></p>
 
         </aside>
 
