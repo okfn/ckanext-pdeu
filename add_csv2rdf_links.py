@@ -57,17 +57,20 @@ def main(base_url, api_key):
 
         # Generate the rdf_mapping and rdf_data URLs, add them to data_dict
         # if they are not already in resource.
+        update = False
         rdf_mapping = 'http://wiki.publicdata.eu/wiki/Csv2rdf:{0}'.format(
                 resource_id)
         if resource.get('rdf_mapping') != rdf_mapping:
             resource['rdf_mapping'] = rdf_mapping
+            update = True
         rdf_data = ('http://csv2rdf.aksw.org/sparqlified/{0}'
             '_default-tranformation-configuration.rdf'.format(resource_id))
         if resource.get('rdf_data') != rdf_data:
             resource['rdf_data'] = rdf_data
+            update = True
 
         # Update the resource, if necessary.
-        if 'rdf_mapping' in data_dict or 'rdf_data' in data_dict:
+        if update:
             logger.info("Adding RDF links to resource: {0}".format(
                 display_name(resource)))
             response = post_to_ckan_api.post_to_ckan_api(base_url,
@@ -96,7 +99,6 @@ def main(base_url, api_key):
         for resource in dataset['resources']:
             if resource['id'] not in resource_ids:
                 if 'rdf_mapping' in resource or 'rdf_data' in resource:
-                    # FIXME this doesn't work it doesn't delete them
                     del resource['rdf_mapping']
                     del resource['rdf_data']
                     logger.info("Removing RDF links from resource: {0}".format(
