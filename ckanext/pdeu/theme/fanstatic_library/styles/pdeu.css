@@ -17,33 +17,28 @@ a {
 .btn-primary:hover {
   background: #223a67 !important;
 }
+header.account-masthead {
+  background: #1b2f54 url('/images/texture.png');
+}
+header.account-masthead .account ul li {
+  border-left-color: #0f192e;
+}
+header.account-masthead .account ul li a:hover {
+  background: #0f192e url('/images/texture.png');
+}
 header.masthead {
   background: #2e4f8e url('/images/texture.png');
 }
 header.masthead .site-search input {
   border-color: #090f1a;
 }
-header.masthead .dropdown-menu li a {
-  color: #2e4f8e;
+header.masthead a.logo img {
+  margin-top: 4px;
+  height: 47px;
 }
-header.masthead .dropdown-menu li a:hover {
-  background-color: #2e4f8e;
-}
-header.masthead .navigation ul.unstyled li.active a {
-  background: #223a67 url('/images/texture.png');
-  -webkit-box-shadow: inset 0 2px 4px #152441;
-  -moz-box-shadow: inset 0 2px 4px #152441;
-  box-shadow: inset 0 2px 4px #152441;
-}
-header.masthead .account {
-  background: #223a67 url('/images/texture.png');
-}
-header.masthead .account .button {
-  background-color: #345aa1;
-}
-header.masthead .account .open .button,
-header.masthead .account .button:hover {
-  background-color: #597fc9 !important;
+header.masthead .navigation .nav li a:hover,
+header.masthead .navigation .nav li.active a {
+  background: #1b2f54 url('/images/texture.png');
 }
 body,
 .site-footer {
@@ -111,15 +106,18 @@ body,
   color: #FFF;
   font-weight: bold;
 }
+.wrapper.map {
+  background-image: none;
+}
+.map-wrapper {
+  padding: 20px;
+}
 .map-wrapper h1 {
   color: #000;
 }
 .map-wrapper #map {
   background: #bbbbbb url('/images/texture.png');
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  margin: 20px 0;
+  margin: 20px -20px;
 }
 .map-wrapper .well {
   background: #dddddd url('/images/texture.png');
@@ -219,6 +217,14 @@ body,
 .featured-ideas .media-image {
   display: none;
 }
+.about {
+  margin-top: 0;
+}
+.about .page-header {
+  -webkit-border-radius: 3px 3px 0 0;
+  -moz-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
+}
 .about h2 {
   margin-bottom: 5px;
 }
@@ -246,8 +252,8 @@ body,
 }
 .pdeu-beta {
   position: absolute;
-  bottom: 4px;
-  left: 178px;
+  bottom: 3px;
+  left: 169px;
   text-indent: 0;
   text-transform: uppercase;
   -webkit-box-shadow: 0 0 1px #223a67;

@@ -4,10 +4,10 @@
   <li class="active"><a href="#">About {{ g.site_title }}</a></li>
 {% endblock %}
 
-{% block actions_content %}
-  <li><a href="mailto:info@publicdata.eu" class="btn"><i class="icon-envelope"></i> Contact Us</a></li>
-  <li><a href="http://lod2.okfn.org/" target="_blank" class="btn"><i class="icon-rss"></i> Project Blog</a></li>
-  <li><a href="http://github.com/okfn/ckanext-pdeu" target="_blank" class="btn"><i class="icon-github"></i> Source Code</a></li>
+{% block add_action_content %}
+  <a href="mailto:info@publicdata.eu" class="btn"><i class="icon-envelope"></i> Contact Us</a>
+  <a href="http://lod2.okfn.org/" target="_blank" class="btn"><i class="icon-rss"></i> Project Blog</a>
+  <a href="http://github.com/okfn/ckanext-pdeu" target="_blank" class="btn"><i class="icon-github"></i> Source Code</a>
 {% endblock %}
 
 {% block primary %}

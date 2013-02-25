@@ -1,27 +1,25 @@
+header.account-masthead {
+	background: darken(@pdeuColorPrimary, 15) url(@pdeuTextureImage);
+	.account ul li {
+		border-left-color: darken(@pdeuColorPrimary, 25);
+		a:hover {
+			background: darken(@pdeuColorPrimary, 25) url(@pdeuTextureImage);
+		}
+	}
+}
+
 header.masthead {
 	background: @pdeuColorPrimary url(@pdeuTextureImage);
 	.site-search input {
 		border-color: darken(@pdeuColorPrimary, 30);
 	}
-	.dropdown-menu li a {
-		color: @pdeuColorPrimary;
-		&:hover {
-			background-color: @pdeuColorPrimary;
-		}
+	a.logo img {
+		margin-top: 4px;
+		height: 47px;
 	}
-	.navigation ul.unstyled li.active a {
-		background: darken(@pdeuColorPrimary, 10) url(@pdeuTextureImage);
-		.box-shadow(inset 0 2px 4px darken(@pdeuColorPrimary, 20));
-	}
-	.account {
-		background: darken(@pdeuColorPrimary, 10) url(@pdeuTextureImage);
-		.button {
-			background-color: lighten(@pdeuColorPrimary, 5);
-		}
-		.open .button,
-		.button:hover {
-			background-color: lighten(@pdeuColorPrimary, 20) !important;
-		}
+	.navigation .nav li a:hover,
+	.navigation .nav li.active a {
+		background: darken(@pdeuColorPrimary, 15) url(@pdeuTextureImage);
 	}
 }
 
