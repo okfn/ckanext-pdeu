@@ -1,6 +1,6 @@
 {% ckan_extends %}
 {% block actions_content %}
-  {% snippet 'package/snippets/back_to_package_action.html', pkg=pkg %}
+    <li>{% link_for _('View dataset'), controller='package', action='read', id=pkg.name, class_='btn', icon='eye-open' %}</li>
 
   {% if h.check_access('package_update', {'id':pkg.id }) %}
     <li>{% link_for _('Edit Resource'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn', icon='wrench' %}</li>
