@@ -29,7 +29,6 @@ class PDEUCustomizations(plugins.SingletonPlugin):
         for date_key in ('deposit_date', 'update_date'):
             if date_key in dataset_dict.keys():
                 match = re.match(publica_format, dataset_dict[date_key])
-                import ipdb; ipdb.set_trace()
                 if match:
                     solrfied_date = new_format.format(**match.groupdict())
                     dataset_dict[date_key] = solrfied_date
