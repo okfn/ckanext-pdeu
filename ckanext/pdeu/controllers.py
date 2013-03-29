@@ -129,19 +129,19 @@ class MapController(BaseController):
         o = json.load(f)
 
         # Get the package count by country
-        q = Session.query(distinct(PackageExtra.value),
-                func.count(PackageExtra.value)).filter(
-                        PackageExtra.key == u'eu_country').group_by(
-                                PackageExtra.value)
-        values = {}
-        for country, count in q.all():
-            values[country] = count
+        q = Session.query(
+                distinct(PackageExtra.value),
+                func.count(PackageExtra.value)
+            ).\
+                filter(PackageExtra.key == u'eu_country').\
+                group_by(PackageExtra.value)
 
+        values = dict(q.all())
         # Set the package count for each country
+        
         for ft in o['features']:
             code = ft['properties']['NUTS']
-            ft['properties']['packages'] = (
-                    values[code] if code in values else 0)
+            ft['properties']['packages'] = (values.get(code, 0))
 
         response.content_type = 'application/json'
         response.pragma = None
