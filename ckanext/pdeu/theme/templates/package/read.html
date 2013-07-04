@@ -32,7 +32,7 @@
     <div class="module-content">
       <p>The information on this page (the dataset metadata) is also available in these formats:</p>
       <p class="btn-group">
-        <a href="{{ h.url_for(controller='api', register='package', action='show', id=c.pkg.name,ver=2) }}" class="btn btn-small">
+        <a href="{{ h.url_for(controller='api', logic_function='package_show', action='action', id=c.pkg.name,ver=3) }}" class="btn btn-small">
           <i class="ckan-icon ckan-icon-json"></i> JSON
         </a>
         <a rel="rdfs:seeAlso" href="/dataset/{{  c.pkg_dict['name'] }}.rdf" class="btn btn-small">
