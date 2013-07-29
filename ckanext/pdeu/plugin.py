@@ -65,8 +65,6 @@ class PDEUCustomizations(plugins.SingletonPlugin):
                     'harvest_catalogue_url', 'harvest_dataset_url',
                     'eu_nuts1', 'eu_nuts2', 'eu_nuts3'])
         config['search.facets'] = 'groups tags extras_eu_country res_format'
-        config['search.facets.extras_eu_country.title'] = 'Country'
-        config['search.facets.res_format.title'] = 'File Formats'
         toolkit.add_resource('theme/fanstatic_library', 'ckanext-pdeu')
 
     def before_map(self, route_map):
@@ -111,7 +109,10 @@ class PDEUCustomizations(plugins.SingletonPlugin):
         return {'code_to_country': countries.code_to_country}
 
     def dataset_facets(self, facets_dict, package_type):
-        facets_dict['extras_eu_country'] = 'Country'
+        facets_dict.update({
+            'extras_eu_country' : toolkit._('Country'),
+            'res_format' : toolkit._('File Formats'),
+        })
         return facets_dict
 
     def group_facets(self, facets_dict, group_type, package_type):
