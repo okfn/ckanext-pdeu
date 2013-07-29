@@ -110,7 +110,7 @@ class PDEUCustomizations(plugins.SingletonPlugin):
 
     def dataset_facets(self, facets_dict, package_type):
         facets_dict.update({
-            'extras_eu_country' : toolkit._('Country'),
+            'extras_eu_country' : toolkit._('Countries'),
             'res_format' : toolkit._('File Formats'),
         })
         return facets_dict
