@@ -13,6 +13,7 @@ class PDEUCustomizations(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IFacets)
 
     def before_index(self, dataset_dict):
 
@@ -108,3 +109,13 @@ class PDEUCustomizations(plugins.SingletonPlugin):
 
     def get_helpers(self):
         return {'code_to_country': countries.code_to_country}
+
+    def dataset_facets(self, facets_dict, package_type):
+        facets_dict['extras_eu_country'] = 'Country'
+        return facets_dict
+
+    def group_facets(self, facets_dict, group_type, package_type):
+        return facets_dict
+
+    def organization_facets(self, facets_dict, organization_type, package_type):
+        return facets_dict
