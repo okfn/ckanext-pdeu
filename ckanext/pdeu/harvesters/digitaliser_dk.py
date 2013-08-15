@@ -1,6 +1,7 @@
 #coding: utf-8
 import logging
 from hashlib import sha1
+import urllib2
 
 from ckan.lib.helpers import json
 from ckanext.harvest.model import HarvestObject
@@ -22,6 +23,14 @@ class DigitaliserDkHarvester(HarvesterBase):
             'form_config_interface':'Text'
         }
 
+
+    def _api_to_source_page(self, api_endpoint):
+        """convert a api_link to the source page as we want the source page
+        displayed on the dataset page, we're just stripping the api and rest
+        strings from the link which seems a bit brittle
+        """
+        return api_endpoint.replace('api', 'www', 1).replace('rest/', '', 1).replace('resources', 'resource', 1)
+
     def gather_stage(self, harvest_job):
         log.debug('In Digitaliser.dk gather_stage')
 
@@ -29,9 +38,9 @@ class DigitaliserDkHarvester(HarvesterBase):
         maxResults = 1000
         ids = []
         while True:
-            req = 'resources/search?query=&firstResult=%s&maxResults=%s' % \
+            req = 'resources/search?query=datakilde&firstResult=%s&maxResults=%s' % \
                  (firstResult, maxResults)
-            doc = etree.parse(self.API_ENDPOINT + req)
+            doc = etree.parse(urllib2.urlopen(self.API_ENDPOINT + req))
             for handle in doc.findall(self.NS + "ResourceHandle"):
                 link = handle.get('handleReference')
                 id = sha1(link).hexdigest()
@@ -41,6 +50,8 @@ class DigitaliserDkHarvester(HarvesterBase):
             firstResult += maxResults
             if firstResult > int(doc.getroot().get('totalResults')):
                 break
+
+        log.debug('finish Digitaliser.dk gather_stage')
         return ids
 
     def fetch_stage(self, harvest_object):
@@ -53,7 +64,7 @@ class DigitaliserDkHarvester(HarvesterBase):
         package_dict['notes'] = doc.findtext(self.NS + 'BodyText')
         package_dict['author'] = doc.findtext(self.NS + \
                 'ResourceOwnerGroupHandle/' + self.NS + 'TitleText')
-        package_dict['extras']['harvest_dataset_url'] = harvest_object.content
+        package_dict['extras']['harvest_dataset_url'] = self._api_to_source_page(harvest_object.content)
 
         package_dict['metadata_created'] = doc.findtext(self.NS + 'CreatedDateTime')
         package_dict['metadata_modified'] = doc.find(self.NS + 'PublishedState').get('publishedDateTime')
@@ -72,8 +83,15 @@ class DigitaliserDkHarvester(HarvesterBase):
         
         ref_handle = doc.find('//' + self.NS + 'ReferenceHandle')
         if ref_handle: 
-            ref_doc = etree.parse(ref_handle.get('handleReference'))
-            package_dict['url'] = ref_doc.getroot().get('url')
+            try:
+                ref_doc = etree.parse(ref_handle.get('handleReference'))
+                package_dict['url'] = ref_doc.getroot().get('url')
+            except IOError, e:
+                resource = ref_handle.get('handleReference')
+                log.warn("Unable to fetch resource for package for {0}".format(
+                    resource))
+
+
 
         for artefact in doc.findall('//' + self.NS + 'ArtefactHandle'):
             try:
@@ -86,10 +104,9 @@ class DigitaliserDkHarvester(HarvesterBase):
             except Exception, e:
                 log.warn(e)
         
-        #from pprint import pprint
-        #pprint(package_dict)
         harvest_object.content = json.dumps(package_dict)
         harvest_object.save()
+        log.debug("finished fetch")
         return True
 
     def import_stage(self,harvest_object):
