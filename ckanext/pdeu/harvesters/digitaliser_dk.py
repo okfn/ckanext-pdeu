@@ -88,8 +88,9 @@ class DigitaliserDkHarvester(HarvesterBase):
                 package_dict['url'] = ref_doc.getroot().get('url')
             except IOError, e:
                 resource = ref_handle.get('handleReference')
-                log.warn("Unable to fetch resource for package for {0}".format(
-                    resource))
+                log.warn("Unable to fetch resource {0} for package for {1}".format(
+                    resource, harvest_object.content))
+                return False
 
 
 

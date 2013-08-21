@@ -1,3 +1,5 @@
 gdata>=2.0.14
 -e git+https://github.com/okfn/ckanext-rdf#egg=ckanext-rdf
 -e git+https://github.com/okfn/datautil#egg=datautil
+lxml
+ckanapi
