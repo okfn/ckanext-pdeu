@@ -20,6 +20,10 @@
 	float: left;
 	width: 400px;
 	margin: 0 20px 0 0;
+	.heading {
+		color: white;
+		margin-bottom: 10px;
+	}
 	.facets {
 		margin: 20px 25px;
 		li {
@@ -28,9 +32,9 @@
 			a {
 				display: block;
 				padding: 2px 10px;
-				.border-radius(100px);
 				background: #EEE url(@pdeuTextureImage);
-				.box-shadow(0 1px 2px darken(@pdeuColorPrimary, 20));
+				.border-radius(100px);
+				.box-shadow(0 1px 0 darken(@pdeuColorPrimary, 20));
 				&:hover {
 					background-color: white;
 					text-decoration: none !important;
@@ -38,55 +42,37 @@
 			}
 		}		
 	}
-}
 
-
-.showcase {
-	h1 {
-		font-size: 26px;
-		margin: 10px 0;
-		text-shadow: 0 1px 0 #FFF;
+	.search-form {
+		clear: both;
+		overflow: hidden;
+		border-bottom-width: 0;
+		margin-bottom: 0;
+		padding-bottom: 0;
 	}
 }
 
 .featured-apps,
 .featured-ideas {
-	h2 {
-		font-size: 21px;
-		margin: 10px 0;
-		text-shadow: 0 1px 0 #FFF;
-	}
-	h3 {
-		margin: 0 0 5px 0;
-		font-size: 16px;
-	}
-	.btn,
-	.banner {
-		display: none;
+	.media-grid {
+		margin: 0 -15px;
+		background: transparent;
+		border-width: 0;
+		.banner {
+			display: none;
+		}
 	}
 	.media-item {
-		margin: 0 0 20px 20px;
-		width: 300px;
-		background: #FFF url(@pdeuTextureImage);
-		padding: 10px;
-		.border-radius(2px 2px);
-		.box-shadow(0 2px 4px #BBB);
-	}
-	.media-image {
-		margin-bottom: 10px;
-	}
-}
-
-
-.featured-apps {
-	.media-item {
-		min-height: 240px;
+		width: 274px;
+		p {
+			margin-bottom: 0;
+		}
 	}
 }
 
 .featured-ideas {
 	margin-bottom: 20px;
-	.media-image {
+	.media-item img {
 		display: none;
 	}
 }

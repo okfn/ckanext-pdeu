@@ -2,10 +2,6 @@
 .main,
 [role="main"] {
 	background-image: url(@pdeuTextureImage);
-	&::after,
-	&::before {
-		display: none;
-	}
 }
 
 a {
@@ -17,4 +13,18 @@ a {
 	&:hover {
 		background: darken(@pdeuColorPrimary, 10) !important;
 	}
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.dropdown-submenu:hover > a,
+.dropdown-submenu:focus > a,
+.media-view:hover .banner,
+.media-view.hovered .banner {
+	background: @pdeuColorPrimary !important;
+}
+
+.media-view:hover,
+.media-view.hovered {
+	border-color: @pdeuColorPrimary !important;
 }
