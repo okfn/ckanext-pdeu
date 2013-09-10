@@ -35,6 +35,42 @@ def display_name(resource):
     else:
         return resource['id']
 
+def fetch(resource_id, base_url, api_key):
+    # Get the resource dict from CKAN.
+    logger.debug("resource_show: {0}".format(resource_id))
+    data_dict = {'id': resource_id}
+    response = post_to_ckan_api.post_to_ckan_api(base_url,
+            'resource_show', data=data_dict, api_key=api_key)
+    assert response['success'] is True, response
+    resource = response['result']
+
+    # Generate the rdf_mapping and rdf_data URLs, add them to data_dict
+    # if they are not already in resource.
+    update = False
+    rdf_mapping = 'http://wiki.publicdata.eu/wiki/Csv2rdf:{0}'.format(
+            resource_id)
+    if resource.get('rdf_mapping') != rdf_mapping:
+        resource['rdf_mapping'] = rdf_mapping
+        update = True
+    rdf_data = ('http://csv2rdf.aksw.org/sparqlified/{0}'
+        '_default-tranformation-configuration.rdf'.format(resource_id))
+    if resource.get('rdf_data') != rdf_data:
+        resource['rdf_data'] = rdf_data
+        update = True
+
+    # Update the resource, if necessary.
+    if update:
+        logger.info("Adding RDF links to resource: {0}".format(
+            display_name(resource)))
+        response = post_to_ckan_api.post_to_ckan_api(base_url,
+                'resource_update', data=resource, api_key=api_key)
+        assert response['success'] is True, response
+        updated_resource = response['result']
+        assert updated_resource.get('rdf_mapping') == rdf_mapping
+        assert updated_resource.get('rdf_data') == rdf_data
+    else:
+        logger.debug("RDF links already present in resource: {0}".format(
+            display_name(resource)))
 
 def main(base_url, api_key):
     # Fetch the list of resource IDs from csv2rdf.
@@ -46,42 +82,7 @@ def main(base_url, api_key):
 
     # Add/update the RDF links in the CKAN database.
     for resource_id in resource_ids:
-
-        # Get the resource dict from CKAN.
-        logger.debug("resource_show: {0}".format(resource_id))
-        data_dict = {'id': resource_id}
-        response = post_to_ckan_api.post_to_ckan_api(base_url,
-                'resource_show', data=data_dict, api_key=api_key)
-        assert response['success'] is True, response
-        resource = response['result']
-
-        # Generate the rdf_mapping and rdf_data URLs, add them to data_dict
-        # if they are not already in resource.
-        update = False
-        rdf_mapping = 'http://wiki.publicdata.eu/wiki/Csv2rdf:{0}'.format(
-                resource_id)
-        if resource.get('rdf_mapping') != rdf_mapping:
-            resource['rdf_mapping'] = rdf_mapping
-            update = True
-        rdf_data = ('http://csv2rdf.aksw.org/sparqlified/{0}'
-            '_default-tranformation-configuration.rdf'.format(resource_id))
-        if resource.get('rdf_data') != rdf_data:
-            resource['rdf_data'] = rdf_data
-            update = True
-
-        # Update the resource, if necessary.
-        if update:
-            logger.info("Adding RDF links to resource: {0}".format(
-                display_name(resource)))
-            response = post_to_ckan_api.post_to_ckan_api(base_url,
-                    'resource_update', data=resource, api_key=api_key)
-            assert response['success'] is True, response
-            updated_resource = response['result']
-            assert updated_resource.get('rdf_mapping') == rdf_mapping
-            assert updated_resource.get('rdf_data') == rdf_data
-        else:
-            logger.debug("RDF links already present in resource: {0}".format(
-                display_name(resource)))
+        fetch(resource_id, base_url, api_key)
 
     # Remove RDF links from the CKAN database, for any resources no longer
     # in the list of resource IDs from csv2rdf.
@@ -131,9 +132,14 @@ if __name__ == '__main__':
             "some of CKAN's standard test resources")
     parser.add_argument('-d', '--debug', action='store_true',
             default=False, help="turn on debug logging")
-    args = parser.parse_args()
+    parser.add_argument('-r', '--resource', action='store',
+            default=False, help="update a specific resource")
+    args, unknown = parser.parse_known_args()
 
     if args.debug:
         logger.setLevel(logging.DEBUG)
 
-    main(args.base_url, args.api_key)
+    if args.resource:
+        fetch(args.resource, args.base_url, args.api_key)
+    else:
+        main(args.base_url, args.api_key)
