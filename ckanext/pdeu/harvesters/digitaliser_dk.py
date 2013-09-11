@@ -107,7 +107,7 @@ class DigitaliserDkHarvester(HarvesterBase):
         return package_dict
 
     def fetch_stage(self, harvest_object):
-        package_dict = self.parser_resource(harvest_object.content)
+        package_dict = self.parse_resource(harvest_object.content)
         harvest_object.content = json.dumps(package_dict)
         harvest_object.save()
         log.debug("finished fetch")
