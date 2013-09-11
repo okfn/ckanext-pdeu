@@ -41,7 +41,11 @@ def fetch(resource_id, base_url, api_key):
     data_dict = {'id': resource_id}
     response = post_to_ckan_api.post_to_ckan_api(base_url,
             'resource_show', data=data_dict, api_key=api_key)
-    assert response['success'] is True, response
+    if response['success'] is False:
+        logger.warn("failed to get response for resource {0}".format(
+            resource_id))
+        return
+
     resource = response['result']
 
     # Generate the rdf_mapping and rdf_data URLs, add them to data_dict
@@ -64,10 +68,18 @@ def fetch(resource_id, base_url, api_key):
             display_name(resource)))
         response = post_to_ckan_api.post_to_ckan_api(base_url,
                 'resource_update', data=resource, api_key=api_key)
-        assert response['success'] is True, response
+        #assert response['success'] is True, response
+        if response['success'] is False:
+            logger.warn("failed to update resource {0}".format(
+                resource_id))
+            return
         updated_resource = response['result']
-        assert updated_resource.get('rdf_mapping') == rdf_mapping
-        assert updated_resource.get('rdf_data') == rdf_data
+        if updated_resource.get('rdf_mapping') != rdf_mapping:
+            logger.warn("failed to update resource {0}".format(
+                resource_id))
+            return
+        #assert updated_resource.get('rdf_mapping') == rdf_mapping
+        #assert updated_resource.get('rdf_data') == rdf_data
     else:
         logger.debug("RDF links already present in resource: {0}".format(
             display_name(resource)))
