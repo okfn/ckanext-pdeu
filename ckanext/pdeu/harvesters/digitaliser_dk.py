@@ -29,7 +29,7 @@ class DigitaliserDkHarvester(HarvesterBase):
         displayed on the dataset page, we're just stripping the api and rest
         strings from the link which seems a bit brittle
         """
-        return api_endpoint.replace('api', 'www', 1).replace('rest/', '', 1).replace('resources', 'resource', 1)
+        return api_endpoint.replace('api', 'www', 1).replace('rest/', '', 1).replace('resources', 'resource', 1).replace('artefacts', 'artefact')
 
     def gather_stage(self, harvest_job):
         log.debug('In Digitaliser.dk gather_stage')
@@ -54,17 +54,16 @@ class DigitaliserDkHarvester(HarvesterBase):
         log.debug('finish Digitaliser.dk gather_stage')
         return ids
 
-    def fetch_stage(self, harvest_object):
-        doc = etree.parse(harvest_object.content)
+    def parse_resource(self, link):
+        doc = etree.parse(link)
         category = doc.findtext('//' + self.NS + 'ResourceCategoryHandle/' + self.NS + 'TitleText')
-        if category != "Datakilde":
-            return
         package_dict = {'extras': {}, 'resources': [], 'tags': []}
         package_dict['title'] = doc.findtext(self.NS + 'TitleText')
         package_dict['notes'] = doc.findtext(self.NS + 'BodyText')
         package_dict['author'] = doc.findtext(self.NS + \
                 'ResourceOwnerGroupHandle/' + self.NS + 'TitleText')
-        package_dict['extras']['harvest_dataset_url'] = self._api_to_source_page(harvest_object.content)
+        package_dict['extras']['harvest_dataset_url'] = self._api_to_source_page(link)
+        package_dict['url'] = self._api_to_source_page(link)
 
         package_dict['metadata_created'] = doc.findtext(self.NS + 'CreatedDateTime')
         package_dict['metadata_modified'] = doc.find(self.NS + 'PublishedState').get('publishedDateTime')
@@ -80,31 +79,35 @@ class DigitaliserDkHarvester(HarvesterBase):
         
         for tag_handle in doc.findall('//' + self.NS + 'TagHandle'):
             package_dict['tags'].append(tag_handle.findtext(self.NS + 'LabelText'))
-        
-        ref_handle = doc.find('//' + self.NS + 'ReferenceHandle')
-        if ref_handle: 
+
+        references = doc.findall('//' + self.NS + 'ReferenceHandle')
+        for reference in references:
             try:
-                ref_doc = etree.parse(ref_handle.get('handleReference'))
-                package_dict['url'] = ref_doc.getroot().get('url')
-            except IOError, e:
-                resource = ref_handle.get('handleReference')
-                log.warn("Unable to fetch resource {0} for package for {1}".format(
-                    resource, harvest_object.content))
-                return False
-
-
-
-        for artefact in doc.findall('//' + self.NS + 'ArtefactHandle'):
-            try:
-                art_doc = etree.parse(artefact.get('handleReference'))
+                reference_doc = etree.parse(reference.get('handleReference'))
+                ref_root = reference_doc.getroot()
                 package_dict['resources'].append({
-                    'url': art_doc.getroot().get('url'),
+                    'url': ref_root.get('url'),
+                    'format': '',
+                    'description': reference_doc.findtext(self.NS + 'TitleText')
+                    })
+            except Exception, e:
+                log.warn(e)
+        
+        artefacts_doc = etree.parse(link + '/artefacts')
+        artefacts = artefacts_doc.findall('//' + self.NS + 'ArtefactHandle')
+        for artefact in artefacts: 
+            try:
+                package_dict['resources'].append({
+                    'url': self._api_to_source_page(artefact.get('handleReference')),
                     'format': '',
                     'description': artefact.findtext(self.NS + 'TitleText')
                     })
             except Exception, e:
                 log.warn(e)
-        
+        return package_dict
+
+    def fetch_stage(self, harvest_object):
+        package_dict = self.parser(harvest_object.content)
         harvest_object.content = json.dumps(package_dict)
         harvest_object.save()
         log.debug("finished fetch")
