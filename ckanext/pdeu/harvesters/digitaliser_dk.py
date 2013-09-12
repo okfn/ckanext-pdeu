@@ -114,11 +114,15 @@ class DigitaliserDkHarvester(HarvesterBase):
         if harvest_object.content is None:
             self._save_object_error('Empty in fetch for content for object %s' % harvest_object.id,harvest_object,'Import')
             return False
-        package_dict = self.parse_resource(harvest_object.content)
-        harvest_object.content = json.dumps(package_dict)
-        harvest_object.save()
-        log.debug("finished fetch")
-        return True
+        try:
+            package_dict = self.parse_resource(harvest_object.content)
+            harvest_object.content = json.dumps(package_dict)
+            harvest_object.save()
+            log.debug("finished fetch")
+            return True
+        except Exception, e:
+            log.exception(e)
+            self._save_object_error('%r' % e, harvest_object, 'Import')
 
     def import_stage(self,harvest_object):
         if not harvest_object:
