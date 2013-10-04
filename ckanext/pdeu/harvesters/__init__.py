@@ -10,3 +10,5 @@ from piemonte import DatiPiemonteItHarvester
 from opendata_cat import OpenDataCatHarvester
 from berlin import BerlinCKANHarvester
 
+from dcat import PDEU_DCATXMLHarvester, PDEU_DCATJSONHarvester
+

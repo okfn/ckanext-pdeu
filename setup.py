@@ -38,6 +38,9 @@ setuptools.setup(
     opendata_cat_harvester=ckanext.pdeu.harvesters:OpenDataCatHarvester
     ckan_berlin_harvester=ckanext.pdeu.harvesters:BerlinCKANHarvester
 
+    pdeu_dcat_xml_harvester=ckanext.pdeu.harvesters:PDEU_DCATXMLHarvester
+    pdeu_dcat_json_harvester=ckanext.pdeu.harvesters:PDEU_DCATJSONHarvester
+
     [nose.plugins.0.10]
     pdeu_nose_plugin = ckanext.pdeu.pdeu_nose_plugin:PDEUNosePlugin
     """,
