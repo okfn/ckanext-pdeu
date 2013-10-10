@@ -112,8 +112,9 @@ class OverheidHarvester(CKANHarvester):
         schema['resources']['url'] = [ignore_missing, unicode]
 
         context = {
-            'user': user['name'],
-            'return_id_only': True,
+            'user' : user['name'],
+            'return_id_only' : True,
+            'ignore_auth' : True
         }
         data_dict = {}
         data_dict['id'] = pkg_dict['id']
