@@ -109,7 +109,7 @@ class OverheidHarvester(CKANHarvester):
                 {'key' : 'eu_country', u'value' : u'NL', 'state' : u'active'},
                 {'key' : 'harvest_catalogue_name', u'value' : u'Overheid.nl', 'state' : u'active'},
                 {'key' : 'harvest_catalogue_url', u'value' : u'http://data.overheid.nl', 'state' : u'active'},
-                {'key' : 'harvest_dataset_url', u'value' : urlparse.urljoin(u'http://data.overheid.nl/data/dataset', harvest_object.guid), 'state' : u'active'},
+                {'key' : 'harvest_dataset_url', u'value' : urlparse.urljoin(u'http://data.overheid.nl/data/dataset/', harvest_object.guid), 'state' : u'active'},
             ])
         except ValueError, e:
             self._save_object_error('Unable to decode content for package: {0}:'.format( 
