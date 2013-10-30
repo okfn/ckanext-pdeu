@@ -129,7 +129,7 @@ class OverheidHarvester(CKANHarvester):
         try:
             existing_package_dict = toolkit.get_action('package_show')(context, data_dict)
 
-            if not 'metadata_modified' in pkg_dict or pkg_dict['metadata_modified'] > existing_package_dict.get('metadata_modified'):
+            if not 'metadata_modified' in pkg_dict or pkg_dict['metadata_modified'] > existing_package_dict.get('metadata_modified') or self.config.get('force_all', False):
 
                 pkg_dict['id'] = harvest_object.package_id
                 package_id = toolkit.get_action('package_update')(context, pkg_dict)
