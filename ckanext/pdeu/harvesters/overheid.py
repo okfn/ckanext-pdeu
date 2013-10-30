@@ -87,6 +87,8 @@ class OverheidHarvester(CKANHarvester):
             self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
             return False
 
+        self._set_config(harvest_object.job.source.config)
+
         # Get the last harvested object (if any)
         previous_object = model.Session.query(HarvestObject) \
                           .filter(HarvestObject.guid==harvest_object.guid) \
