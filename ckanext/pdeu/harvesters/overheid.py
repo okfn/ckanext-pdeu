@@ -94,7 +94,7 @@ class OverheidHarvester(CKANHarvester):
                           .first()
 
         # Flag previous object as not current anymore
-        if previous_object and not self.force_import:
+        if previous_object:
             previous_object.current = False
             previous_object.add()
         
