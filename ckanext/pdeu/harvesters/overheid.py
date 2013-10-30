@@ -117,7 +117,12 @@ class OverheidHarvester(CKANHarvester):
             return False
 
         # remove resources with empty url
-        resources = [ r for r in pkg_dict.get('resources', []) if r.get('url') != '']
+        resources = []
+        for resource in pkg_dict.get('resources', []):
+            if resource.get('url') != '':
+                #remove revisions as we probably have not harvested them
+                resource.pop('revision_id', None)
+                resources.append(resource)
         pkg_dict['resources'] = resources
 
         user = toolkit.get_action('get_site_user')({'ignore_auth': True}, {})
@@ -136,7 +141,6 @@ class OverheidHarvester(CKANHarvester):
 
             if not 'metadata_modified' in pkg_dict or pkg_dict['metadata_modified'] > existing_package_dict.get('metadata_modified') or self.config.get('force_all', False):
 
-                pkg_dict['id'] = harvest_object.package_id
                 package_id = toolkit.get_action('package_update')(context, pkg_dict)
                 log.info('Updated dataset with id %s', package_id)
 
