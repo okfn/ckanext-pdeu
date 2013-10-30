@@ -118,8 +118,7 @@ class OverheidHarvester(CKANHarvester):
 
         # remove resources with empty url
         resources = [ r for r in pkg_dict.get('resources', []) if r.get('url') != '']
-        if resources:
-            pkg_dict['resources'] = resources
+        pkg_dict['resources'] = resources
 
         user = toolkit.get_action('get_site_user')({'ignore_auth': True}, {})
         schema = logic.schema.default_create_package_schema()
