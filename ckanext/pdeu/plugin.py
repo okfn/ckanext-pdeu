@@ -6,6 +6,9 @@ import ckan.plugins.toolkit as toolkit
 
 import countries
 
+def package_create(context, data_dict=None):
+    return {'success': False, 'msg': toolkit._('Only the sysadmins can create packages')}
+
 class UnexpectedDateFormat(Exception) : pass
 
 class PDEUCustomizations(plugins.SingletonPlugin):
@@ -14,6 +17,10 @@ class PDEUCustomizations(plugins.SingletonPlugin):
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IFacets)
+    plugins.implements(plugins.IAuthFunctions)
+
+    def get_auth_functions(self):
+        return {'package_create' : package_create}
 
     def before_index(self, dataset_dict):
 
