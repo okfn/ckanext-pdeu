@@ -199,8 +199,30 @@ body,
 .featured-ideas {
   margin-bottom: 20px;
 }
+.featured-ideas .media-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.featured-ideas .media-list .banner {
+  display: none;
+}
+.featured-ideas .media-item {
+  display: block;
+  float: none;
+  width: auto;
+  margin: 0 0 10px 0;
+}
 .featured-ideas .media-item img {
   display: none;
+}
+.homepage-twitter {
+  border: 1px solid #DDD;
+  background-color: #FFF;
+  min-height: 400px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 .about {
   margin-top: 0;

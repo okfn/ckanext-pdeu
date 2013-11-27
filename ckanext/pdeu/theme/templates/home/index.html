@@ -41,18 +41,20 @@
       <h2>{{ _('Featured Applications') }}</h3>
       {% snippet "related/snippets/related_list.html", is_homepage=true, related_items=c.feautured_related_apps %}
     </div>
-    <div class="featured-ideas">
-      <h2>{{ _('Featured Ideas') }}</h3>
-      {% snippet "related/snippets/related_list.html", is_homepage=true, related_items=c.feautured_related_ideas %}
-    </div>
   </div>
 
-  <div class="signup well">
-    <form action="/subscribe" class="subscribe" method="POST">
-      <div class="input-append">
-        <input type="text" name="email" placeholder="{{ _('Your Email Address') }}"><button type="submit" class="btn btn-large btn-primary">{{ _('Subscribe') }}</button>
-      </div>
-    </form>
-    <h2>{{ _('Stay up to date with publicdata.eu and European public data') }}</h2>
+  <div class="row">
+    <div class="featured-ideas span8">
+      <h2>{{ _('Featured Ideas') }}</h2>
+      <ul class="media-list">
+        {% for related in c.feautured_related_ideas %}
+          {% snippet "related/snippets/related_item.html", pkg_id=pkg_id, related=related, position=loop.index %}
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="span4">
+      <h2>{{ _('PublicData.eu on Twitter') }}</h2>
+      {% snippet "home/snippets/twitter.html" %}
+    </div>
   </div>
 {% endblock %}
