@@ -26,7 +26,7 @@ this.ckan.module('euromap', function($, _) {
 			if (this.options.homepage) {
 				options.dragging = options.touchZoom = options.scrollWheelZoom =
 				options.doubleClickZoom = options.zoomControl = false;
-				options.minZoom = options.maxZoom = 3.2;
+				options.minZoom = options.maxZoom = 3.4;
 				linecolor = '#A8BADB';
 			} else {
 				options.minZoom = 4;
@@ -42,7 +42,7 @@ this.ckan.module('euromap', function($, _) {
 						opacity: 1,
 						fillOpacity: 1,
 						color: linecolor,
-						weight: 1.5
+						weight: 1
 					});
 				}
 			});
