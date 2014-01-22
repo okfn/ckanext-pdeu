@@ -96,6 +96,11 @@ class PDEUCustomizations(plugins.SingletonPlugin):
     def after_map(self, route_map):
         return route_map
 
+    def after_show(self, context, data_dict):
+        if 'type' in data_dict and data_dict['type'] == 'harvest':
+            context['return_stats'] = False
+            context['return_error_summary'] = False
+
     def read(self, pkg):
         try:
             toolkit.c.eu_country = pkg.extras.get('eu_country')
