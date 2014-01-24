@@ -19,22 +19,22 @@ this.ckan.module('euromap', function($, _) {
 			                               1);
 			var linecolor = '#000000'
 			var options = {
-				crs: L.CRS.EPSG4326,
+			//	crs: L.CRS.EPSG4326,
 				attributionControl: false
 			}
 
 			if (this.options.homepage) {
 				options.dragging = options.touchZoom = options.scrollWheelZoom =
 				options.doubleClickZoom = options.zoomControl = false;
-				options.minZoom = options.maxZoom = 3.4;
+				options.minZoom = options.maxZoom = 3;
 				linecolor = '#A8BADB';
 			} else {
-				options.minZoom = 4;
+				options.minZoom = 3.4;
 				options.maxZoom = 7;
 			}
 
 			this.map = new L.Map(this.el.prop('id'), options);
-			this.map.setView(new L.LatLng(48.74, 8.98), 4);
+			this.map.setView(new L.LatLng(55.74, 15.98), 3);
 
 			this.map.on('layeradd', function(e) {
 				if (e.layer instanceof L.Path) {
@@ -52,23 +52,20 @@ this.ckan.module('euromap', function($, _) {
 		},
 		_onHandleMapJSON: function(json) {
 			this.breaks = this._onGetBreakPoints(json.features);
-			var geo = new L.GeoJSON();
-			geo.on('featureparse', this._onHandleMapFeatureParse);
-			geo.addGeoJSON(json);
-			this.map.addLayer(geo);
+            L.geoJson(json, {onEachFeature: this._onHandleMapFeatureParse}).addTo(this.map);
 		},
-		_onHandleMapFeatureParse: function(geo) {
-			var color = this._onGetColor(geo.properties.packages);
-			geo.layer.setStyle({fillColor: color});
+		_onHandleMapFeatureParse: function(feature, layer) {
+			var color = this._onGetColor(feature.properties.packages);
+			layer.setStyle({fillColor: color});
 			if (this.options.homepage){
-				var country = geo.properties.NUTS;
-				geo.layer.on('click', function(e) {
+				var country = feature.properties.NUTS;
+				layer.on('click', function(e) {
 					document.location.href = '/dataset?extras_eu_country=' + country;
 					return false;
 				});
 			} else {
-				var popupText = this._onGetPopupHTML(geo.properties);
-				geo.layer.bindPopup(popupText);
+				var popupText = this._onGetPopupHTML(feature.properties);
+				layer.bindPopup(popupText);
 			}
 		},
 		_onGetBreakPoints: function(features) {
