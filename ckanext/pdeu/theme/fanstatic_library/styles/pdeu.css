@@ -50,6 +50,44 @@ body,
 .site-footer {
   background: #223a67 url('/images/texture.png');
 }
+section.notice.edp {
+  background-color: #fff;
+}
+section.notice.edp > div {
+  display: table;
+  font-size: 16px;
+  color: #0f75bc;
+}
+section.notice.edp > div a {
+  color: inherit;
+}
+section.notice.edp > div > a,
+section.notice.edp > div > p,
+section.notice.edp > div > span {
+  display: table-cell;
+}
+section.notice.edp > div .icon {
+  width: 166px;
+  background-image: url(../../../../images/edp-logo.png);
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 166px auto;
+}
+section.notice.edp > div > p {
+  padding: 30px;
+}
+section.notice.edp > div > span {
+  text-align: right;
+}
+section.notice.edp > div > span a {
+  display: inline-block;
+  background-color: #f99f1b;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 6px 20px;
+  text-decoration: none;
+}
 .signup {
   background: #9fa7ad url('/images/texture.png');
   color: #FFF;

@@ -1,5 +1,14 @@
 {% ckan_extends %}
 
+{% block header_wrapper %}
+    <section class="edp notice">
+        <div class="container">
+            <a href="http://www.europeandataportal.eu/" target="_blank" class="icon"></a><p>To find data from European countries, go explore <a href="http://www.europeandataportal.eu/" target="_blank">EUROPEAN <strong>DATA PORTAL</strong></a>.</p><span><a href="http://www.europeandataportal.eu/" target="_blank">Try it out</a></span>
+        </div>
+    </section>
+    {{ super() }}
+{% endblock %}
+
 {% block header_logo %}
   {{ super() }}
   <span class="label label-important pdeu-beta">Beta</span>

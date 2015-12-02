@@ -27,3 +27,51 @@ body,
 .site-footer {
 	background: darken(@pdeuColorPrimary, 10) url(@pdeuTextureImage);
 }
+
+section.notice {
+	&.edp {
+		background-color: #fff;
+
+		& > div {
+			display: table;
+			font-size: 16px;
+			color: #0f75bc;
+
+			a {
+				color: inherit;
+			}
+
+			& > a,
+			& > p,
+			& > span {
+				display: table-cell;
+			}
+
+			.icon {
+				width: 166px;
+				background-image: url(../../../../images/edp-logo.png);
+				background-position: left center;
+				background-repeat: no-repeat;
+				background-size: 166px auto;
+			}
+
+			& > p {
+				padding: 30px;
+			}
+
+			& > span {
+				text-align: right;
+
+				a {
+					display: inline-block;
+					background-color: #f99f1b;
+					color: #fff;
+					font-weight: bold;
+					border-radius: 3px;
+					padding: 6px 20px;
+					text-decoration: none;
+				}
+			}
+		}
+	}
+}
